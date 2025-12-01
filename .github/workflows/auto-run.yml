@@ -23,7 +23,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install aiohttp requests beautifulsoup4
+        pip install aiohttp requests beautifulsoup4 plyer
 
     - name: Run bilopslag.nu.py
       run: python "bilopslag.nu.py"
