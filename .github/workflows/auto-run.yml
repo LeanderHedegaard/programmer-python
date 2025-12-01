@@ -1,0 +1,54 @@
+name: Auto Plate Scan & Deploy
+
+on:
+  schedule:
+    # Mandag–fredag, hver time fra 08:00 til 17:00 dansk tid (≈ 07–16 UTC)
+    - cron: "0 7-16 * * 1-5"
+  workflow_dispatch:       # mulighed for manuel kørsel fra GitHub UI
+
+jobs:
+  run-scripts:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        persist-credentials: false
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+
+    - name: Install dependencies
+      run: |
+        pip install aiohttp requests beautifulsoup4
+
+    - name: Run bilopslag.nu.py
+      run: python "bilopslag.nu.py"
+
+    - name: Run EN scanner
+      run: python "EN med print til plates.py"
+
+    - name: Commit updated data
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "actions@github.com"
+        git add plates.json found_plates.txt || true
+        git commit -m "Auto-update plates.json" || echo "No changes to commit"
+        git push || echo "No changes to push"
+
+    - name: Install Netlify CLI
+      run: npm install -g netlify-cli
+
+    - name: Deploy to Netlify
+      run: |
+        netlify deploy \
+          --prod \
+          --dir="." \
+          --auth="$NETLIFY_AUTH_TOKEN" \
+          --site="$NETLIFY_SITE_ID"
+      env:
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
