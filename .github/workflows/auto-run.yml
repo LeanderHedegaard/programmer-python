@@ -2,20 +2,21 @@ name: Auto Plate Scan & Deploy
 
 on:
   schedule:
-    # Mandag–fredag, hver time fra 08:00 til 17:00 dansk tid (≈ 07–16 UTC)
-    - cron: "0 7-16 * * 1-5"
-  workflow_dispatch:       # mulighed for manuel kørsel
+    - cron: "0 7-16 * * 1-5"   # mandag-fredag 08-17 dansk tid
+  workflow_dispatch:
 
 jobs:
-  run-scripts:
+  run:
     runs-on: ubuntu-latest
 
     steps:
+    # --- CHECKOUT REPO ---
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
-        persist-credentials: false
+        fetch-depth: 0
 
+    # --- SETUP PYTHON ---
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -25,25 +26,51 @@ jobs:
       run: |
         pip install aiohttp requests beautifulsoup4 plyer
 
+    # --- RUN PYTHON SCRIPTS ---
     - name: Run bilopslag.nu.py
       run: python "bilopslag.nu.py"
 
     - name: Run EN scanner
       run: python "EN med print til plates.py"
 
-    - name: Commit updated data
+    # --- DEBUG: SHOW GIT DIFFERENCE ---
+    - name: Check if plates.json changed
       run: |
-        git config --global user.name "github-actions"
-        git config --global user.email "actions@github.com"
+        echo "=== GIT DIFF FOR insurance-app/plates.json ==="
+        git diff --stat insurance-app/plates.json || true
+        echo "=============================================="
+
+    # --- COMMIT CHANGES ---
+    - name: Commit updated plates.json
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
         git add insurance-app/plates.json found_plates.txt || true
+
+        # Debug info before committing
+        echo "=== FILES STAGED FOR COMMIT ==="
+        git diff --cached --stat || true
+        echo "==============================="
+
         git commit -m "Auto-update plates.json" || echo "No changes to commit"
+
+    # --- SAFETY: FIX PUSH ERRORS ---
+    - name: Pull latest changes (rebase)
+      run: |
+        git pull --rebase origin main || true
+
+    - name: Push changes
+      run: |
         git push || echo "No changes to push"
 
+    # --- DEPLOY ---
     - name: Install Netlify CLI
       run: npm install -g netlify-cli
 
     - name: Deploy to Netlify
       run: |
+        echo "=== DEPLOYING insurance-app FOLDER ==="
         netlify deploy \
           --prod \
           --dir="insurance-app" \
