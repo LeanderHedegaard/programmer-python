@@ -16,11 +16,9 @@ RUNNING_IN_GITHUB = os.getenv("GITHUB_ACTIONS") == "true"
 # Notifikation (kun lokalt)
 # ---------------------------------
 if RUNNING_IN_GITHUB:
-    # I GitHub har vi ikke et desktop-miljø → brug dummy
     class DummyNotification:
         def notify(self, *args, **kwargs):
             pass
-
     notification = DummyNotification()
 else:
     try:
@@ -31,18 +29,16 @@ else:
                 pass
         notification = DummyNotification()
 
-
 # ---------------------------------
 # FIL-STIER
 # ---------------------------------
 FOUND_PLATES_FILE = "found_plates.txt"
 
-# GitHub: brug repo-root; Lokalt: fuld sti til insurance-app
+# GitHub: skriv i insurance-app/; Lokalt: fuld sti
 if RUNNING_IN_GITHUB:
-    JSON_FILE_PATH = "plates.json"
+    JSON_FILE_PATH = "insurance-app/plates.json"
 else:
     JSON_FILE_PATH = r"C:\Users\Leander\Desktop\insurance-app\plates.json"
-
 
 # ---------------------------------
 # API-INFO
@@ -71,9 +67,7 @@ BILOPSLAG_HEADERS = {
 
 BILOPSLAG_COOKIES = {}  # ikke nødvendige
 
-
 PLADE_REGEX = r"^[A-Z]{2}\d{3,5}$"
-
 
 # ---------------------------------
 # DEPLOY-HÅNDTERING
@@ -111,7 +105,6 @@ else:
         else:
             print("❌ Deploy fejlede:", result.returncode)
 
-
 # ---------------------------------
 # FIL-HÅNDTERING
 # ---------------------------------
@@ -145,7 +138,6 @@ def load_previous_plates():
 def save_new_plate(plate):
     with open(FOUND_PLATES_FILE, "a") as f:
         f.write(f"{plate}\n")
-
 
 # ---------------------------------
 # HENT PLADER
@@ -191,7 +183,6 @@ def hent_plaader_fra_bilopslag():
     print(f"\n🎯 I alt fundet: {len(plader)} plader")
     return plader
 
-
 # ---------------------------------
 # HENT FORSIKRINGSINFO
 # ---------------------------------
@@ -213,7 +204,6 @@ async def get_insurance_info(session, stelnr):
         print(f"Fejl ved forsikringsopslag: {e}")
 
     return "Ukendt", "Ukendt"
-
 
 # ---------------------------------
 # PROCESSÉR EN PLADE
@@ -258,7 +248,6 @@ async def process_plate(session, regnr, stelnr, plates_data, previous, new_set, 
 
     print(f"✅ Ny registrering: {regnr} | {selskab}")
 
-
 # ---------------------------------
 # HOVEDPROGRAM
 # ---------------------------------
@@ -289,7 +278,6 @@ async def check_new_registrations():
             message=f"Fundet {len(new_plates)} nye plader",
             timeout=10,
         )
-
 
 # ---------------------------------
 # MAIN
