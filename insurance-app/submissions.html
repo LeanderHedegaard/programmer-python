@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <title>Dine indsendelser</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="text-primary">Dine indsendelser</h1>
+    <div id="output" class="mt-4">Indlæser...</div>
+  </div>
+
+  <script>
+    function showData(user) {
+      const email = encodeURIComponent(user.email);
+      const url = `/leads/${email}.json`;
+
+      fetch(url)
+        .then(res => {
+          if (!res.ok) throw new Error("Ingen data fundet");
+          return res.json();
+        })
+        .then(data => {
+          if (!data.length) {
+            document.getElementById("output").innerHTML = "<div class='alert alert-warning'>Ingen indsendelser fundet.</div>";
+            return;
+          }
+
+          const table = `
+            <table class="table table-bordered table-striped">
+              <thead class="thead-dark">
+                <tr>
+                  <th>Dato</th>
+                  <th>Nummerplade</th>
+                  <th>Præmie</th>
+                  <th>IP</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${data.map(row => `
+                  <tr>
+                    <td>${row.Dato ? new Date(row.Dato).toLocaleString("da-DK") : "-"}</td>
+                    <td>${row.Nummerplade || "-"}</td>
+                    <td>${row.Præmie || "-"}</td>
+                    <td>${row["IP-adresse"] || "-"}</td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>`;
+          document.getElementById("output").innerHTML = table;
+        })
+        .catch(err => {
+          document.getElementById("output").innerHTML = "<div class='alert alert-danger'>Kunne ikke hente dine data.</div>";
+        });
+    }
+
+    // Initialisering af Netlify Identity
+    netlifyIdentity.on("init", user => {
+      if (user) {
+        showData(user);
+      } else {
+        netlifyIdentity.open();
+      }
+    });
+
+    netlifyIdentity.on("login", user => {
+      showData(user);
+    });
+
+    netlifyIdentity.init();
+  </script>
+</body>
+</html>

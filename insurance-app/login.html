@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Log ind</h1>
+        <button id="loginButton">Log ind</button>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const loginButton = document.getElementById("loginButton");
+
+            // Åbn login-widget, når der klikkes på login-knappen
+            loginButton.addEventListener("click", function () {
+                netlifyIdentity.open();
+            });
+
+            // Omdiriger til hovedside, når brugeren logger ind
+            netlifyIdentity.on("login", () => {
+                window.location.href = "/";
+            });
+        });
+    </script>
+</body>
+</html>

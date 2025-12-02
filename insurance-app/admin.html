@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Oversigt</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1 class="mt-5 text-primary">Oversigt over nummerplader</h1>
+    <div class="d-flex justify-content-end mb-3">
+      <button id="importData" class="btn btn-outline-success">Importer data</button>
+      <button id="exportPremier" class="btn btn-outline-info ml-2">Hent præmier</button>
+    </div>
+    <table class="table table-striped table-hover shadow-lg">
+      <thead>
+        <tr>
+          <th>Nummerplade</th>
+          <th>Dato</th>
+          <th>Tjekket</th>
+          <th>Præmie (DKK)</th>
+          <th>Sendt af</th>
+          <th>Tidspunkt</th>
+        </tr>
+      </thead>
+      <tbody id="adminTableBody"></tbody>
+    </table>
+
+    <!-- Formular til at indsende præmier -->
+    <form 
+      data-netlify="true" 
+      method="POST" 
+      id="premiumForm" 
+      name="premiumForm"
+      netlify-honeypot="bot-field"
+      class="mt-4"
+    >
+      <div style="display: none;">
+        <input name="bot-field">
+        <input type="hidden" name="user" id="userInput"> <!-- Skjult felt -->
+      </div>
+      <input type="hidden" name="form-name" value="premiumForm">
+      <h2>Indtast Præmie</h2>
+      <div class="form-group">
+        <label for="premiumInput">Præmie (DKK):</label>
+        <input 
+          type="number" 
+          class="form-control" 
+          id="premiumInput" 
+          name="premium" 
+          required 
+          placeholder="F.eks. 2500"
+          step="0.01"
+        >
+        <input type="hidden" name="nummerplade" id="plateInput">
+      </div>
+      <button type="submit" class="btn btn-primary">Send Præmie</button>
+    </form>
+  </div>
+
+  <!-- Modal til import -->
+  <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content shadow-lg" style="border-radius: 15px;">
+        <div class="modal-header bg-primary text-white" style="border-radius: 15px 15px 0 0;">
+          <h5 class="modal-title" id="importModalLabel">Importer data</h5>
+          <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="importForm">
+            <div class="form-group">
+              <label for="importInput" class="text-dark font-weight-bold">Indsæt JSON-data</label>
+              <textarea class="form-control form-control-lg" id="importInput" rows="5" placeholder='F.eks. {"Alm. Brand": [{"plate": "EH43146", "checked": true, "premium": 2500, "timestamp": "2025-02-24T12:00:00Z"}]}'></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Annuller</button>
+          <button type="button" class="btn btn-primary" id="submitImport">Importer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

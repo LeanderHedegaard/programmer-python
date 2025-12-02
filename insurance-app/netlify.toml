@@ -1,0 +1,33 @@
+# netlify.toml
+
+[build]
+  # Angiver mappen, der skal deployes som den offentlige mappe (statiske filer)
+  publish = "public"
+  # Kommandoen, der kører, når projektet bygges (hvis nødvendigt)
+  # Fjern eller kommentér ud, hvis du ikke har brug for en build
+  command = "echo 'Build completed'"
+
+[functions]
+  # Angiver mappen, hvor Netlify-funktioner (serverless) ligger
+  directory = "netlify/functions"
+
+[[redirects]]
+from = "/submissions"
+to = "/submissions.html"
+status = 200
+
+  status = 200
+
+[[redirects]]
+  # Omdiriger specifikke sider til deres HTML-filer
+  from = "/login"
+  to = "/login.html"
+  status = 200
+
+  from = "/admin"
+  to = "/admin.html"
+  status = 200
+
+  from = "/broker"
+  to = "/broker.html"
+  status = 200

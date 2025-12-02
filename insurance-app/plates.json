@@ -1,0 +1,3800 @@
+{
+    "ALKA for TRYG Forsikring": [
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EP30056",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN91606",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN65000",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN63489",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN90882",
+            "premium": 0
+        }
+    ],
+    "Alm. Brand": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92396",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58738",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN97716",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP31055",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83765",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30279",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EG68988",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EG68991",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "DL430",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "DW204",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN96641",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN48074",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83176",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN63421",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN69749",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN97122",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58270",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN87734",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN26282",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN71795",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN82689",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92433",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN85034",
+            "premium": 0
+        }
+    ],
+    "Audi Forsikring for Alm. Brand Forsikring A/S": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56801",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30277",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30298",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89438",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89445",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89450",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN68378",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN68384",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN68385",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN68387",
+            "premium": 0
+        }
+    ],
+    "BORNHOLMS BRAND A/S": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "FZ6761",
+            "premium": 0
+        }
+    ],
+    "Bauta Forsikring for LB Forsikring A/S": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58757",
+            "premium": 0
+        }
+    ],
+    "Codan Forsikring for Alm. Brand Forsikring A/S": [
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EM94707",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EP30269",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EP30270",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EP23964",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92424",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP31057",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56803",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP23590",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP23588",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92401",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92428",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN67904",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN97290",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN97719",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89440",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89452",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN73320",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN73330",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM97966",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN82790",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN94477",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM97968",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN73323",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM97969",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM97962",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM97964",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM97963",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM97965",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM97967",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN73328",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN73322",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN85766",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN73329",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM92434",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN73321",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN73327",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN73326",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN73325",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN73324",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56815",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN45752",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN72201",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89453",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89454",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89455",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89456",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89457",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89458",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89459",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN39149",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83376",
+            "premium": 0
+        }
+    ],
+    "EURO INSURANCES DAC": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN21803",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP25894",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30288",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN36684",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58747",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58744",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN24883",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58736",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56449",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN68956",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58746",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83748",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP25895",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83752",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83751",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83750",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83761",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83768",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56804",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN60696",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN71788",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN71789",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN71787",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56607",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN86012",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30274",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30273",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83758",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30283",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30291",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30296",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30287",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM87001",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP31059",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58741",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56451",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EG68989",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58961",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56805",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56810",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN68373",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN48072",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN86013",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN96358",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN80551",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56814",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56818",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56819",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56823",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56824",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN68381",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN57213",
+            "premium": 0
+        }
+    ],
+    "EasySure for Eir Försäkring AB": [
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN97155",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN63488",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN82690",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP31061",
+            "premium": 0
+        }
+    ],
+    "Forsia Forsikring A/S": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN21804",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58758",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN22715",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN97902",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP14169",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN95536",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83049",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN13996",
+            "premium": 0
+        }
+    ],
+    "GF-FORSIKRING A/S": [
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EP29788",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EM94709",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN91830",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP25896",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN97717",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN96836",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN97534",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89448",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN84775",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN85411",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN62632",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN61421",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN95508",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN95803",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN88346",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92004",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92864",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN93383",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN65698",
+            "premium": 0
+        }
+    ],
+    "GJENSIDIGE FORSIKRING": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP36419",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN96352",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN85840",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP23586",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN73097",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56606",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30281",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83756",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30215",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN82683",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30293",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30300",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83757",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EL65163",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "FZ6770",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN21808",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89980",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89981",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56806",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56812",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN25508",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89446",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN11263",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN40911",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM58261",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EL23803",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN52521",
+            "premium": 0
+        }
+    ],
+    "Greenval Insurance DAC": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92397",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56450",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN86008",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56605",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN86011",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN82681",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30297",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30301",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM92956",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56604",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89444",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83500",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN80548",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN80552",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN80550",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83493",
+            "premium": 0
+        }
+    ],
+    "HDI Danmark": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92395",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92393",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83746",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP31058",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83754",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58769",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30282",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM92955",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN36683",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN94155",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN88742",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN80553",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN80554",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56821",
+            "premium": 0
+        }
+    ],
+    "HF-FORSIKRING G/S": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EG68993",
+            "premium": 0
+        }
+    ],
+    "HIMMERLAND": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN85591",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN96986",
+            "premium": 0
+        }
+    ],
+    "IF SKADEFORSIKRING": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN68753",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM55725",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN91792",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN68752",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "FZ6766",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58729",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM55723",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP27836",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP36418",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN97715",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83749",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "FZ6758",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "FZ6760",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83755",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP25898",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN82678",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56456",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM55726",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN82680",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "FZ6764",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "FZ6765",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "FZ6763",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30284",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "DL427",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58743",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM55722",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92429",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM55721",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM55724",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EA42704",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EA42706",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EA42705",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "DL429",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM55727",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM92957",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM92959",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "FZ6767",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "FZ6768",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92410",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "DL431",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58760",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN91793",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30285",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58774",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92415",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92418",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "FZ6771",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "FZ6772",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92427",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "FZ6773",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89451",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN64846",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP33214",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP27837",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "FZ6774",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "FZ6777",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN24814",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN88109",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN67171",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56822",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN70641",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN72070",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83495",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN84054",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN84753",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92967",
+            "premium": 0
+        }
+    ],
+    "Jyske Forsikring for Købstædernes Forsikring": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN95568",
+            "premium": 0
+        }
+    ],
+    "KØBSTÆDERNES FORS.": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92425",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EM94708",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56448",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP27834",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP29789",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN82684",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92419",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58742",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN37182",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN96993",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89449",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN95870",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN95871",
+            "premium": 0
+        }
+    ],
+    "LOKAL FORSIKRING G/S": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92398",
+            "premium": 0
+        }
+    ],
+    "Lærerstandens Brandforsikring for LB Forsikring A/S": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP23885",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92426",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN13773",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN70640",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN59906",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN63443",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92045",
+            "premium": 0
+        }
+    ],
+    "NEXT for Eir Försäkring AB": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN94421",
+            "premium": 0
+        }
+    ],
+    "POPERMO": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN88817",
+            "premium": 0
+        }
+    ],
+    "PROTECTOR FORSIKRING ASA": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56447",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58740",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83760",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56802",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30276",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92394",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP36423",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN71791",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN25507",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89182",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89436",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89437",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89443",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83002",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EL22927",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN80549",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN81853",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83003",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56817",
+            "premium": 0
+        }
+    ],
+    "Privatsikring_Erhvervssikring": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "DL428",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30305",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN97650",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN88111",
+            "premium": 0
+        }
+    ],
+    "Prosam Forsikring Rådgivning for Eir Försäkring": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "FZ6776",
+            "premium": 0
+        }
+    ],
+    "SEAT Forsikring for Alm. Brand Forsikring A/S": [
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EP33209",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83771",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP23591",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP23589",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN70609",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83769",
+            "premium": 0
+        }
+    ],
+    "SKODA Forsikring for Alm. Brand Forsikring A/S": [
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN82676",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EP30271",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EP29787",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN88112",
+            "premium": 0
+        }
+    ],
+    "TRYG FORSIKRING A/S": [
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EP33208",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP37182",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92392",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92407",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92416",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56446",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58748",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92399",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58751",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP36424",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58749",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EP39561",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92400",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58750",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58761",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92404",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN24880",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN24879",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58737",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN24881",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN24877",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN24871",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN24875",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83977",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN24876",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN24873",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58730",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN24882",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58731",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP36416",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EG68987",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30089",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP36420",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58732",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP36417",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58734",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58728",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83747",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP31056",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58727",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP37178",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP23587",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83770",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP37180",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN96357",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN86009",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56455",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP37184",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83767",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58963",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN24885",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN96355",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58965",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58964",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56452",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58752",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN24872",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56454",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN82682",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30290",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30275",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58762",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58745",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP37183",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP40118",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN96356",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30286",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56453",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN86010",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30292",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92405",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP31060",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92413",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN24878",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58735",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN96354",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EG68992",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58733",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30278",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP37176",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EG68990",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58755",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58753",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM92958",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58756",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58754",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92414",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30303",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM92954",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30306",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58759",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58763",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83976",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58770",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92402",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "GA4430",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58765",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58764",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58771",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58768",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP37179",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58766",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92403",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58772",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92406",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58775",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92409",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58773",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58776",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58778",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92408",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92411",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92421",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92412",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN24884",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP36425",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92422",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP37181",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83772",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58777",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92420",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92417",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP37177",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56807",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56808",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56809",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56811",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN96574",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN68374",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN68375",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN85767",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN97477",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN48071",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89441",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89442",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89447",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN73128",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN90050",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN90957",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN91211",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN65566",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP31062",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP25164",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN85769",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "FZ6775",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN85768",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN85770",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN88555",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN73129",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN41180",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN96643",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN55709",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN67748",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56457",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56459",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56609",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56820",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN96360",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN68376",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN68379",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN68380",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN68383",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN86078",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN97668",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN88553",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN72200",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89735",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN72916",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83095",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92432",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN42769",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN65953",
+            "premium": 0
+        }
+    ],
+    "Thisted Forsikring A/S": [
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN61472",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN82679",
+            "premium": 0
+        }
+    ],
+    "Topdanmark for If Skadeforsikring, filial af If Skadeförsäkring AB (publ), Sverige": [
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN59900",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN91794",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN21805",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP36422",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "FZ6759",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP36421",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83759",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP23592",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83763",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP23886",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58962",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN82685",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP23884",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN96223",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN24874",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30304",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "FZ6769",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EK18753",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EM66414",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58767",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN71021",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83773",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92423",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "DW327",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN45445",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN48073",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN88107",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN62276",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN91605",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN65699",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN93162",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP26250",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN86639",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN95869",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN81189",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN80058",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN50877",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN32900",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN96224",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56813",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN96511",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN68377",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN97123",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58970",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58966",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN59030",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN80504",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN80505",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89609",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN50882",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN92008",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN41379",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN53664",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN42451",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN65541",
+            "premium": 0
+        }
+    ],
+    "VEJLE BRAND": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN97601",
+            "premium": 0
+        }
+    ],
+    "VESTJYLLAND G/S": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN89439",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN93161",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN90959",
+            "premium": 0
+        }
+    ],
+    "Viking Forsikringsagentur for Købstædernes Forsikring": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83753",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN81188",
+            "premium": 0
+        }
+    ],
+    "Volkswagen Forsikring for Alm. Brand Forsikring A/S": [
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EP39560",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EP33210",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN85590",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EP33213",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EP33212",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EP33211",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-11-30",
+            "plate": "EN86006",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN82686",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83762",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83766",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN85410",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN83764",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN71790",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30272",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30289",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30295",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30299",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP39333",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP39332",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30302",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP14170",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN88108",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN88110",
+            "premium": 0
+        }
+    ],
+    "XL Insurance Company SE": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN68382",
+            "premium": 0
+        }
+    ],
+    "ZURICH DANMARK": [
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN58739",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EP30280",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN56816",
+            "premium": 0
+        },
+        {
+            "checked": false,
+            "date": "2025-12-01",
+            "plate": "EN68386",
+            "premium": 0
+        }
+    ]
+}
