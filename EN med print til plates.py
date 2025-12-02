@@ -34,7 +34,7 @@ else:
 FOUND_PLATES_FILE = "found_plates.txt"
 
 if RUNNING_IN_GITHUB:
-    JSON_FILE_PATH = "plates.json"
+    JSON_FILE_PATH = "insurance-app/plates.json"
 else:
     JSON_FILE_PATH = r"C:\Users\Leander\Desktop\insurance-app\plates.json"
 
@@ -47,7 +47,6 @@ BASE_URL = "https://www.nummerplade.net/nummerplade/"
 INSURANCE_URL = "https://data1.nummerplade.net/dmr_forsikring.php?stelnr="
 
 MAX_CONNECTIONS = 40
-
 
 # ---------------------------------
 # Fil-funktioner
@@ -80,15 +79,10 @@ def save_new_plate(plate):
     with open(FOUND_PLATES_FILE, "a") as f:
         f.write(f"{plate}\n")
 
-
 # ---------------------------------
 # HTML parsing helpers
 # ---------------------------------
 def extract_last_change_date(html: str):
-    """
-    Udtrækker dato for seneste ændring.
-    Matcher fx: id="seneste_aendring">d. 30-11-2025
-    """
     m = re.search(r'id="seneste_aendring">d\.\s*(\d{2}-\d{2}-\d{4})', html)
     if not m:
         return None
@@ -99,20 +93,14 @@ def extract_last_change_date(html: str):
 
 
 def extract_stelnr(html: str):
-    """
-    Finder stelnummer. Vi prøver et par forskellige mønstre.
-    """
-    # JavaScript-variabel
     m = re.search(r'var\s+search_data\s*=\s*"(\w+)"', html)
     if m:
         return m.group(1).upper()
 
-    # Tekst "stelnummer XXXXX..."
     m = re.search(r"stelnummer\s+([A-Z0-9]+)", html, re.IGNORECASE)
     if m:
         return m.group(1).upper()
 
-    # Som fallback: kig efter VIN-lignende felt i tabeller
     soup = BeautifulSoup(html, "html.parser")
     text = soup.get_text(" ", strip=True)
     m = re.search(r"(VF[A-Z0-9]{10,}|WVW[A-Z0-9]{10,}|[A-HJ-NPR-Z0-9]{17})", text)
@@ -120,7 +108,6 @@ def extract_stelnr(html: str):
         return m.group(1).upper()
 
     return None
-
 
 # ---------------------------------
 # API kald
@@ -151,10 +138,6 @@ async def get_insurance_info(session, stelnr: str):
 
 
 async def get_car_info(session, regnr: str, semaphore: asyncio.Semaphore):
-    """
-    Henter info for en EN-plade.
-    Returnerer (regnr, stelnr) eller (None, None), hvis den skal ignoreres.
-    """
     url = f"{BASE_URL}{regnr}.html"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
@@ -169,7 +152,6 @@ async def get_car_info(session, regnr: str, semaphore: asyncio.Semaphore):
 
                 html = await resp.text()
 
-                # Tjek sidste ændringsdato
                 last_change = extract_last_change_date(html)
                 if not last_change:
                     return None, None
@@ -189,7 +171,6 @@ async def get_car_info(session, regnr: str, semaphore: asyncio.Semaphore):
             print(f"Fejl ved {regnr}: {e}")
             return None, None
 
-
 # ---------------------------------
 # Hovedprocessen
 # ---------------------------------
@@ -205,16 +186,13 @@ async def check_new_registrations():
     semaphore = asyncio.Semaphore(MAX_CONNECTIONS)
 
     async with aiohttp.ClientSession(connector=connector) as session:
-        # Lav en liste af tasks (ikke en generator)
         tasks = [
             get_car_info(session, f"EN{num:05d}", semaphore)
             for num in range(regnr_start, regnr_slut + 1)
         ]
 
-        # Kør alle car-info-opslag parallelt
         results = await asyncio.gather(*tasks)
 
-        # For hver plade der blev fundet:
         for regnr, stelnr in results:
             if not regnr or not stelnr:
                 continue
@@ -226,10 +204,8 @@ async def check_new_registrations():
             save_new_plate(regnr)
             new_plates.add(regnr)
 
-            # Hent forsikringsinfo
             selskab, oprettet = await get_insurance_info(session, stelnr)
 
-            # Tjek dato på forsikring (i dag eller i går)
             try:
                 dato_obj = datetime.strptime(oprettet, "%d-%m-%Y").date()
                 today = datetime.now().date()
@@ -263,7 +239,6 @@ async def check_new_registrations():
             message=f"Fundet {len(new_plates)} nye plader",
             timeout=10,
         )
-
 
 # ---------------------------------
 # MAIN
