@@ -7,23 +7,38 @@ import requests
 import subprocess
 from datetime import datetime, timedelta
 
-# Notifikation (plyer virker kun lokalt, ikke i GitHub Actions)
-try:
-    from plyer import notification
-except:
-    class Dummy:
-        def notify(self, *args, **kwargs): pass
-    notification = Dummy()
+# ---------------------------------
+# Environment-detektion
+# ---------------------------------
+RUNNING_IN_GITHUB = os.getenv("GITHUB_ACTIONS") == "true"
+
+# ---------------------------------
+# Notifikation (kun lokalt)
+# ---------------------------------
+if RUNNING_IN_GITHUB:
+    # I GitHub har vi ikke et desktop-miljø → brug dummy
+    class DummyNotification:
+        def notify(self, *args, **kwargs):
+            pass
+
+    notification = DummyNotification()
+else:
+    try:
+        from plyer import notification
+    except Exception:
+        class DummyNotification:
+            def notify(self, *args, **kwargs):
+                pass
+        notification = DummyNotification()
 
 
 # ---------------------------------
 # FIL-STIER
 # ---------------------------------
-
 FOUND_PLATES_FILE = "found_plates.txt"
 
-# Lokalt bruger du fuld sti — i GitHub Actions bruges "plates.json" i repoet
-if os.getenv("GITHUB_ACTIONS") == "true":
+# GitHub: brug repo-root; Lokalt: fuld sti til insurance-app
+if RUNNING_IN_GITHUB:
     JSON_FILE_PATH = "plates.json"
 else:
     JSON_FILE_PATH = r"C:\Users\Leander\Desktop\insurance-app\plates.json"
@@ -32,9 +47,7 @@ else:
 # ---------------------------------
 # API-INFO
 # ---------------------------------
-
 insurance_url = "https://data1.nummerplade.net/dmr_forsikring.php?stelnr="
-
 MAX_CONNECTIONS = 20
 
 BILOPSLAG_HEADERS = {
@@ -56,7 +69,8 @@ BILOPSLAG_HEADERS = {
     ),
 }
 
-BILOPSLAG_COOKIES = {}  # Ikke nødvendig længere
+BILOPSLAG_COOKIES = {}  # ikke nødvendige
+
 
 PLADE_REGEX = r"^[A-Z]{2}\d{3,5}$"
 
@@ -64,12 +78,10 @@ PLADE_REGEX = r"^[A-Z]{2}\d{3,5}$"
 # ---------------------------------
 # DEPLOY-HÅNDTERING
 # ---------------------------------
-
-RUNNING_IN_GITHUB = os.getenv("GITHUB_ACTIONS") == "true"
-
 if RUNNING_IN_GITHUB:
 
     def deploy_site():
+        # Deploy håndteres af GitHub Actions workflowet, ikke her
         print("⏭️ Skipper Netlify deploy (GitHub Actions håndterer dette).")
 
 else:
@@ -103,12 +115,11 @@ else:
 # ---------------------------------
 # FIL-HÅNDTERING
 # ---------------------------------
-
 def load_existing_data():
     try:
         with open(JSON_FILE_PATH, "r", encoding="utf-8") as f:
             return json.load(f)
-    except:
+    except Exception:
         return {}
 
 
@@ -116,6 +127,7 @@ def save_to_json(data):
     """Gemmer JSON både lokalt og i GitHub Actions."""
     dir_name = os.path.dirname(JSON_FILE_PATH)
 
+    # Kun opret mappe hvis der faktisk er en mappe-del (lokalt)
     if dir_name and not os.path.exists(dir_name):
         os.makedirs(dir_name, exist_ok=True)
 
@@ -138,7 +150,6 @@ def save_new_plate(plate):
 # ---------------------------------
 # HENT PLADER
 # ---------------------------------
-
 def hent_plaader_fra_bilopslag():
     i_dag = datetime.now().date()
     i_gar = i_dag - timedelta(days=1)
@@ -184,7 +195,6 @@ def hent_plaader_fra_bilopslag():
 # ---------------------------------
 # HENT FORSIKRINGSINFO
 # ---------------------------------
-
 async def get_insurance_info(session, stelnr):
     url = f"{insurance_url}{stelnr}"
     headers = {
@@ -199,17 +209,16 @@ async def get_insurance_info(session, stelnr):
                 if data.get("status_code") == "1":
                     d = data["carData"]
                     return d.get("selskab", "Ukendt"), d.get("oprettet", "Ukendt")
-    except:
-        pass
+    except Exception as e:
+        print(f"Fejl ved forsikringsopslag: {e}")
 
     return "Ukendt", "Ukendt"
 
 
 # ---------------------------------
-# PROCESSÉR PLADER
+# PROCESSÉR EN PLADE
 # ---------------------------------
-
-async def process_plate(session, regnr, stelnr, plates_data, previous, new, sem):
+async def process_plate(session, regnr, stelnr, plates_data, previous, new_set, sem):
     if regnr in previous:
         return
 
@@ -218,7 +227,7 @@ async def process_plate(session, regnr, stelnr, plates_data, previous, new, sem)
 
     try:
         dato_obj = datetime.strptime(oprettet, "%d-%m-%Y").date()
-    except:
+    except Exception:
         return
 
     today = datetime.now().date()
@@ -245,7 +254,7 @@ async def process_plate(session, regnr, stelnr, plates_data, previous, new, sem)
 
     plates_data[selskab].append(entry)
     save_new_plate(regnr)
-    new.add(regnr)
+    new_set.add(regnr)
 
     print(f"✅ Ny registrering: {regnr} | {selskab}")
 
@@ -253,7 +262,6 @@ async def process_plate(session, regnr, stelnr, plates_data, previous, new, sem)
 # ---------------------------------
 # HOVEDPROGRAM
 # ---------------------------------
-
 async def check_new_registrations():
     plates_data = load_existing_data()
     previous = load_previous_plates()
@@ -261,6 +269,7 @@ async def check_new_registrations():
 
     plader_og_stel = hent_plaader_fra_bilopslag()
     if not plader_og_stel:
+        print("Ingen biler fundet, afslutter.")
         return
 
     connector = aiohttp.TCPConnector(limit=MAX_CONNECTIONS)
@@ -285,7 +294,6 @@ async def check_new_registrations():
 # ---------------------------------
 # MAIN
 # ---------------------------------
-
 if __name__ == "__main__":
     asyncio.run(check_new_registrations())
     deploy_site()
