@@ -1,81 +1,92 @@
-name: Auto Plate Scan & Deploy
+name: Run scripts + update plates.json + Netlify deploy
 
 on:
   schedule:
-    - cron: "0 7-16 * * 1-5"   # mandag-fredag 08-17 dansk tid
+    # HVER TIME MAN-FRE MELLEM 08 OG 17
+    - cron: "0 8-17 * * 1-5"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-  run:
+  run-scripts:
     runs-on: ubuntu-latest
 
     steps:
-    # --- CHECKOUT REPO ---
-    - name: Checkout repository
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
+      # 1) Checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    # --- SETUP PYTHON ---
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.10"
+      # 2) Setup Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
 
-    - name: Install dependencies
-      run: |
-        pip install aiohttp requests beautifulsoup4 plyer
+      # 3) Install dependencies
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4 aiohttp playwright pyppeteer plyer
 
-    # --- RUN PYTHON SCRIPTS ---
-    - name: Run bilopslag.nu.py
-      run: python "bilopslag.nu.py"
+      # 4) Debug — vis working directory og filer
+      - name: Debug: List files before scripts
+        run: |
+          echo "PWD:"
+          pwd
+          echo "--- Repo root ---"
+          ls -la
+          echo "--- insurance-app ---"
+          ls -la insurance-app
 
-    - name: Run EN scanner
-      run: python "EN med print til plates.py"
+      # 5) Run bilopslag.nu script
+      - name: Run bilopslag.nu.py
+        run: python "bilopslag.nu.py"
 
-    # --- DEBUG: SHOW GIT DIFFERENCE ---
-    - name: Check if plates.json changed
-      run: |
-        echo "=== GIT DIFF FOR insurance-app/plates.json ==="
-        git diff --stat insurance-app/plates.json || true
-        echo "=============================================="
+      # 6) Run EN script
+      - name: Run EN scanner
+        run: python "EN med print til plates.py"
 
-    # --- COMMIT CHANGES ---
-    - name: Commit updated plates.json
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      # 7) Debug — vis plader og diff
+      - name: Debug: Check plates.json changes
+        run: |
+          echo "=== Git diff for insurance-app/plates.json ==="
+          git diff insurance-app/plates.json || true
+          echo "=== FILE CONTENTS ==="
+          head -n 50 insurance-app/plates.json
 
-        git add insurance-app/plates.json found_plates.txt || true
+      # 8) Commit ændringer hvis der ER ændringer
+      - name: Commit updated plates.json
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-        # Debug info before committing
-        echo "=== FILES STAGED FOR COMMIT ==="
-        git diff --cached --stat || true
-        echo "==============================="
+          git add insurance-app/plates.json || true
+          git add found_plates.txt || true
 
-        git commit -m "Auto-update plates.json" || echo "No changes to commit"
+          if git diff --cached --quiet; then
+            echo "Ingen ændringer at committe."
+          else
+            git commit -m "Auto-update plates.json"
+            git push
+          fi
 
-    # --- SAFETY: FIX PUSH ERRORS ---
-    - name: Pull latest changes (rebase)
-      run: |
-        git pull --rebase origin main || true
+      # 9) Installer Netlify CLI
+      - name: Install Netlify CLI
+        run: npm install -g netlify-cli
 
-    - name: Push changes
-      run: |
-        git push || echo "No changes to push"
+      # 10) Deploy til Netlify
+      - name: Netlify deploy
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          netlify deploy \
+            --prod \
+            --dir="insurance-app" \
+            --auth="$NETLIFY_AUTH_TOKEN" \
+            --site="$NETLIFY_SITE_ID"
 
-    # --- DEPLOY ---
-    - name: Install Netlify CLI
-      run: npm install -g netlify-cli
-
-    - name: Deploy to Netlify
-      run: |
-        echo "=== DEPLOYING insurance-app FOLDER ==="
-        netlify deploy \
-          --prod \
-          --dir="insurance-app" \
-          --auth="$NETLIFY_AUTH_TOKEN" \
-          --site="$NETLIFY_SITE_ID"
-      env:
-        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      # 11) Debug — bekræft succes
+      - name: Done
+        run: echo "Workflow OK ✔"
