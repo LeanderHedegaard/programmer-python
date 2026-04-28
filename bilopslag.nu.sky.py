@@ -43,12 +43,6 @@ BILOPSLAG_HEADERS = {
 PLADE_REGEX = r"^[A-Z]{2}\d{3,5}$"
 
 
-def within_cph_window():
-    """Kører kun mellem 08:00 og 15:59 dansk tid. Alle ugens dage."""
-    now = datetime.now(ZoneInfo("Europe/Copenhagen"))
-    return 8 <= now.hour <= 15
-
-
 def load_existing_data():
     try:
         with open(JSON_FILE_PATH, "r", encoding="utf-8") as f:
@@ -86,6 +80,7 @@ def upload_plate_to_supabase(company, entry):
         return False
 
     url = f"{SUPABASE_URL}/rest/v1/plates"
+
     payload = {
         "company": company,
         "plate": entry["plate"],
@@ -94,6 +89,7 @@ def upload_plate_to_supabase(company, entry):
         "premium": entry.get("premium", 0),
         "note": entry.get("note", ""),
     }
+
     headers = {
         "apikey": SUPABASE_SERVICE_ROLE_KEY,
         "Authorization": f"Bearer {SUPABASE_SERVICE_ROLE_KEY}",
@@ -103,11 +99,14 @@ def upload_plate_to_supabase(company, entry):
 
     try:
         response = requests.post(url, headers=headers, json=payload, timeout=20)
+
         if response.status_code not in (200, 201, 204):
             print(f"❌ Supabase upload fejlede: {response.status_code} {response.text}")
             return False
+
         print(f"✅ Uploadet til Supabase: {company} | {entry['plate']}")
         return True
+
     except Exception as e:
         print(f"❌ Fejl ved Supabase upload: {e}")
         return False
@@ -132,7 +131,13 @@ def hent_plaader_fra_bilopslag():
         print(f"\n🔎 Henter side {page}: {url}")
 
         try:
-            resp = requests.get(url, headers=BILOPSLAG_HEADERS, cookies=BILOPSLAG_COOKIES, timeout=20)
+            resp = requests.get(
+                url,
+                headers=BILOPSLAG_HEADERS,
+                cookies=BILOPSLAG_COOKIES,
+                timeout=20,
+            )
+
             print(f"HTTP status bilopslag side {page}: {resp.status_code}")
             resp.raise_for_status()
 
@@ -150,6 +155,7 @@ def hent_plaader_fra_bilopslag():
 
                 if not vin or not plade:
                     continue
+
                 if re.match(PLADE_REGEX, plade):
                     plader_og_stel.append((plade, vin))
                     print(f" - Plade: {plade} | Stelnummer: {vin}")
@@ -164,6 +170,7 @@ def hent_plaader_fra_bilopslag():
 
 async def get_insurance_info(session, stelnr):
     url = f"{INSURANCE_URL}{stelnr}"
+
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
         "Accept": "application/json, text/javascript, */*; q=0.01",
@@ -175,12 +182,15 @@ async def get_insurance_info(session, stelnr):
         async with session.get(url, headers=headers, timeout=30) as response:
             if response.status == 200:
                 data = await response.json()
+
                 if data.get("status_code") == "1":
                     car_data = data.get("carData", {})
                     selskab = car_data.get("selskab", "Ukendt")
                     oprettet = car_data.get("oprettet", "Ukendt")
                     return str(selskab).strip(), str(oprettet).strip()
+
             return "Ukendt", "Ukendt"
+
     except Exception as e:
         print(f"Fejl ved forsikringsopslag for stelnummer {stelnr}: {e}")
         return "Ukendt", "Ukendt"
@@ -202,7 +212,9 @@ async def process_plate(session, regnr, stelnr, plates_data, previous_plates, ne
             if dato_obj not in (today, yesterday):
                 print(f"Springer {regnr} over - oprettet dato er {oprettet}")
                 return
+
             dato = dato_obj.strftime("%Y-%m-%d")
+
         except Exception:
             print(f"Springer {regnr} over - kunne ikke læse oprettet dato: {oprettet}")
             return
@@ -219,14 +231,18 @@ async def process_plate(session, regnr, stelnr, plates_data, previous_plates, ne
             plates_data[selskab] = []
 
         existing_plates = {p.get("plate") for p in plates_data.get(selskab, [])}
+
         if regnr in existing_plates:
             print(f"Springer duplicate over i lokal JSON: {regnr}")
             return
 
         plates_data[selskab].append(entry)
+
         upload_plate_to_supabase(selskab, entry)
+
         save_new_plate(regnr)
         new_plates.add(regnr)
+
         print(f"✅ Ny registrering behandlet: {regnr} | {selskab}")
 
 
@@ -236,6 +252,7 @@ async def check_new_registrations():
     plates_data = load_existing_data()
     previous_plates = load_previous_plates()
     new_plates = set()
+
     plader_og_stel = hent_plaader_fra_bilopslag()
 
     if not plader_og_stel:
@@ -247,9 +264,18 @@ async def check_new_registrations():
 
     async with aiohttp.ClientSession(connector=connector) as session:
         tasks = [
-            process_plate(session, regnr, stelnr, plates_data, previous_plates, new_plates, semaphore)
+            process_plate(
+                session,
+                regnr,
+                stelnr,
+                plates_data,
+                previous_plates,
+                new_plates,
+                semaphore,
+            )
             for regnr, stelnr in plader_og_stel
         ]
+
         await asyncio.gather(*tasks)
 
     if new_plates:
@@ -261,5 +287,5 @@ async def check_new_registrations():
 
 if __name__ == "__main__":
     print("Script startet.")
-        asyncio.run(check_new_registrations())
+    asyncio.run(check_new_registrations())
     print("Script færdigt.")
