@@ -261,8 +261,5 @@ async def check_new_registrations():
 
 if __name__ == "__main__":
     print("Script startet.")
-    if not within_cph_window():
-        print("Uden for tidsvindue 08–15 Europe/Copenhagen. Stopper.")
-    else:
         asyncio.run(check_new_registrations())
     print("Script færdigt.")
