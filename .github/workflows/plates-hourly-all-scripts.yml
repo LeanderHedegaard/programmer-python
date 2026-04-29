@@ -2,7 +2,8 @@ name: Update plates hourly
 
 on:
   schedule:
-    - cron: "0 * * * *"
+    # Kører hvert 40. minut
+    - cron: "*/40 * * * *"
   workflow_dispatch: {}
 
 jobs:
