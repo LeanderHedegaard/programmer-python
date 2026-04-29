@@ -19,7 +19,7 @@ JSON_FILE_PATH.parent.mkdir(parents=True, exist_ok=True)
 SUPABASE_URL = os.getenv("SUPABASE_URL", "")
 SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
 
-PREFIX = "EN"
+PREFIX = "ES"
 START_REGNR = PREFIX + "00000"
 END_REGNR = PREFIX + "99999"
 
