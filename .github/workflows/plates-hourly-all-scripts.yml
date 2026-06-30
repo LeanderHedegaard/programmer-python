@@ -2,13 +2,25 @@ name: Update plates hourly
 
 on:
   schedule:
-    # Kører cirka hver 30. minut
-    - cron: "*/30 * * * *"
+    # Flere forskudte schedules.
+    # GitHub er ofte forsinket, men dette giver langt flere chancer for run.
+    - cron: "0,30 * * * *"
+    - cron: "10,40 * * * *"
+    - cron: "20,50 * * * *"
+
   workflow_dispatch: {}
+
+# Sørger for at der ikke kører flere på samme tid.
+# Hvis GitHub starter en ny mens den gamle stadig kører, afbrydes den gamle.
+concurrency:
+  group: update-plates
+  cancel-in-progress: true
 
 jobs:
   run:
     runs-on: ubuntu-latest
+
+    timeout-minutes: 35
 
     steps:
       - name: Checkout
