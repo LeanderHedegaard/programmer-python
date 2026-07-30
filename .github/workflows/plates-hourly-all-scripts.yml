@@ -1,67 +1,109 @@
-name: Update plates hourly
+name: Update plates every 30 minutes
 
 on:
   schedule:
-    # Flere forskudte schedules.
-    # GitHub er ofte forsinket, men dette giver langt flere chancer for run.
-    - cron: "0,30 * * * *"
-    - cron: "10,40 * * * *"
-    - cron: "20,50 * * * *"
+    # Cirka hvert 30. minut, lidt forskudt fra hel og halv time
+    - cron: "7,37 * * * *"
 
-  workflow_dispatch: {}
+  # Gør det muligt at starte manuelt
+  workflow_dispatch:
 
-# Sørger for at der ikke kører flere på samme tid.
-# Hvis GitHub starter en ny mens den gamle stadig kører, afbrydes den gamle.
+# Ingen cancel-in-progress.
+# Hvis et tidligere run stadig arbejder, venter det næste i køen.
 concurrency:
-  group: update-plates
-  cancel-in-progress: true
+  group: update-plates-${{ github.workflow }}
+  cancel-in-progress: false
 
 jobs:
-  run:
+  bilopslag:
+    name: Bilopslag
     runs-on: ubuntu-latest
-
-    timeout-minutes: 35
+    timeout-minutes: 120
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Show files
-        run: |
-          pwd
-          ls -la
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: "pip"
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run bilopslag scraper
+      - name: Run bilopslag
         env:
-          JSON_FILE_PATH: public/plates/plates.json
+          JSON_FILE_PATH: /tmp/plates-bilopslag.json
           BILOPSLAG_COOKIES_JSON: ${{ secrets.BILOPSLAG_COOKIES_JSON }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          python "bilopslag.nu.sky.py"
+          python -u "bilopslag.nu.sky.py"
 
-      - name: Run EN scraper
+  en:
+    name: EN
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Verify EN prefix
+        run: |
+          grep 'PREFIX =' "EN_med_print_til_plates_supabase.py"
+
+      - name: Run EN
         env:
-          JSON_FILE_PATH: public/plates/plates.json
+          JSON_FILE_PATH: /tmp/plates-en.json
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          python "EN_med_print_til_plates_supabase.py"
+          python -u "EN_med_print_til_plates_supabase.py"
 
-      - name: Run EP scraper
+  ep:
+    name: EP
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Verify EP prefix
+        run: |
+          grep 'PREFIX =' "EP_med_print_til_plates_json_supabase.py"
+
+      - name: Run EP
         env:
-          JSON_FILE_PATH: public/plates/plates.json
+          JSON_FILE_PATH: /tmp/plates-ep.json
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          python "EP_med_print_til_plates_json_supabase.py"
+          python -u "EP_med_print_til_plates_json_supabase.py"
