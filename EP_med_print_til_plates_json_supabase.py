@@ -78,7 +78,7 @@ except json.JSONDecodeError:
 # NUMMERPLADE-INTERVAL
 # ============================================================
 
-PREFIX = "EV"
+PREFIX = "EW"
 
 START_NUMBER = int(
     os.getenv(
