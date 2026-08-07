@@ -2,26 +2,26 @@ name: Update plates every 30 minutes
 
 on:
   schedule:
-    # Cirka hvert 30. minut, lidt forskudt fra hel og halv time
+    # Ca. hvert 30. minut.
+    # 07 og 37 min over timen for at undgå GitHubs travleste cron-tidspunkter.
     - cron: "7,37 * * * *"
 
-  # Gør det muligt at starte manuelt
+  # Mulighed for manuel start
   workflow_dispatch:
 
-# Ingen cancel-in-progress.
-# Hvis et tidligere run stadig arbejder, venter det næste i køen.
-concurrency:
-  group: update-plates-${{ github.workflow }}
-  cancel-in-progress: false
-
 jobs:
+
+  # ==========================================================
+  # BILOPSLAG
+  # ==========================================================
+
   bilopslag:
     name: Bilopslag
     runs-on: ubuntu-latest
     timeout-minutes: 120
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -35,14 +35,27 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run bilopslag
+      - name: Run Bilopslag scraper
         env:
           JSON_FILE_PATH: /tmp/plates-bilopslag.json
+
           BILOPSLAG_COOKIES_JSON: ${{ secrets.BILOPSLAG_COOKIES_JSON }}
+
+          NUMMERPLADE_COOKIES_JSON: ${{ secrets.NUMMERPLADE_COOKIES_JSON }}
+
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+          MAX_CONNECTIONS: "8"
+
         run: |
           python -u "bilopslag.nu.sky.py"
+
+
+  # ==========================================================
+  # EN
+  # ==========================================================
 
   en:
     name: EN
@@ -50,7 +63,7 @@ jobs:
     timeout-minutes: 120
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -64,17 +77,42 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Verify EN prefix
+      - name: Verify EN configuration
         run: |
+          echo "Kontrollerer EN-script..."
           grep 'PREFIX =' "EN_med_print_til_plates_supabase.py"
+          grep 'START_NUMBER' "EN_med_print_til_plates_supabase.py" || true
+          grep 'END_NUMBER' "EN_med_print_til_plates_supabase.py" || true
 
-      - name: Run EN
+      - name: Run EN scraper
         env:
           JSON_FILE_PATH: /tmp/plates-en.json
+
+          NUMMERPLADE_COOKIES_JSON: ${{ secrets.NUMMERPLADE_COOKIES_JSON }}
+
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+          START_NUMBER: "10000"
+
+          END_NUMBER: "99999"
+
+          MAX_CONNECTIONS: "6"
+
+          SCAN_BATCH_SIZE: "250"
+
+          MAX_RETRIES: "2"
+
+          REQUEST_TIMEOUT_SECONDS: "20"
+
         run: |
           python -u "EN_med_print_til_plates_supabase.py"
+
+
+  # ==========================================================
+  # EP
+  # ==========================================================
 
   ep:
     name: EP
@@ -82,7 +120,7 @@ jobs:
     timeout-minutes: 120
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -96,14 +134,34 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Verify EP prefix
+      - name: Verify EP configuration
         run: |
+          echo "Kontrollerer EP-script..."
           grep 'PREFIX =' "EP_med_print_til_plates_json_supabase.py"
+          grep 'START_NUMBER' "EP_med_print_til_plates_json_supabase.py" || true
+          grep 'END_NUMBER' "EP_med_print_til_plates_json_supabase.py" || true
 
-      - name: Run EP
+      - name: Run EP scraper
         env:
           JSON_FILE_PATH: /tmp/plates-ep.json
+
+          NUMMERPLADE_COOKIES_JSON: ${{ secrets.NUMMERPLADE_COOKIES_JSON }}
+
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+          START_NUMBER: "10000"
+
+          END_NUMBER: "99999"
+
+          MAX_CONNECTIONS: "6"
+
+          SCAN_BATCH_SIZE: "250"
+
+          MAX_RETRIES: "2"
+
+          REQUEST_TIMEOUT_SECONDS: "20"
+
         run: |
           python -u "EP_med_print_til_plates_json_supabase.py"
