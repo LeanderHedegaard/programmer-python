@@ -38,6 +38,11 @@ SUPABASE_SERVICE_ROLE_KEY = os.getenv(
     "",
 )
 
+
+# ============================================================
+# BILOPSLAG COOKIES
+# ============================================================
+
 try:
     BILOPSLAG_COOKIES = json.loads(
         os.getenv(
@@ -45,8 +50,12 @@ try:
             "",
         ) or "{}"
     )
+
 except json.JSONDecodeError:
-    print("⚠️ BILOPSLAG_COOKIES_JSON er ikke gyldig JSON.")
+    print(
+        "⚠️ BILOPSLAG_COOKIES_JSON er ikke gyldig JSON."
+    )
+
     BILOPSLAG_COOKIES = {}
 
 
@@ -54,20 +63,33 @@ except json.JSONDecodeError:
 # INDSTILLINGER
 # ============================================================
 
-COPENHAGEN = ZoneInfo("Europe/Copenhagen")
+COPENHAGEN = ZoneInfo(
+    "Europe/Copenhagen"
+)
 
-BILOPSLAG_BASE_URL = "https://bilopslag.nu"
+BILOPSLAG_BASE_URL = (
+    "https://bilopslag.nu"
+)
 
+# Antal samtidige forsikringsopslag
 MAX_CONNECTIONS = int(
     os.getenv(
         "MAX_CONNECTIONS",
-        "12",
+        "20",
     )
 )
 
 REQUEST_TIMEOUT = int(
     os.getenv(
         "REQUEST_TIMEOUT",
+        "20",
+    )
+)
+
+# Vis status efter hver 25 behandlede
+PROGRESS_EVERY = int(
+    os.getenv(
+        "PROGRESS_EVERY",
         "25",
     )
 )
@@ -83,13 +105,28 @@ PLADE_REGEX = re.compile(
 
 BILOPSLAG_HEADERS = {
     "accept": "*/*",
-    "accept-language": "da-DK,da;q=0.9,en-US;q=0.8,en;q=0.7",
+
+    "accept-language": (
+        "da-DK,da;q=0.9,"
+        "en-US;q=0.8,"
+        "en;q=0.7"
+    ),
+
     "cache-control": "no-cache",
+
     "pragma": "no-cache",
-    "referer": "https://bilopslag.nu/avanceret-soegning",
+
+    "referer": (
+        "https://bilopslag.nu/"
+        "avanceret-soegning"
+    ),
+
     "sec-fetch-dest": "empty",
+
     "sec-fetch-mode": "cors",
+
     "sec-fetch-site": "same-origin",
+
     "user-agent": (
         "Mozilla/5.0 "
         "(Windows NT 10.0; Win64; x64) "
@@ -109,7 +146,9 @@ def parse_date(value):
     if not value:
         return None
 
-    value = str(value).strip()
+    value = str(
+        value
+    ).strip()
 
     for fmt in (
         "%Y-%m-%d",
@@ -121,6 +160,7 @@ def parse_date(value):
                 value,
                 fmt,
             ).date()
+
         except ValueError:
             continue
 
@@ -136,6 +176,17 @@ def normalize_company(value):
     ).strip()
 
 
+def chunks(items, size):
+    for index in range(
+        0,
+        len(items),
+        size,
+    ):
+        yield items[
+            index:index + size
+        ]
+
+
 # ============================================================
 # LOKAL JSON
 # ============================================================
@@ -148,9 +199,14 @@ def load_existing_data():
             encoding="utf-8",
         ) as file:
 
-            data = json.load(file)
+            data = json.load(
+                file
+            )
 
-            if isinstance(data, dict):
+            if isinstance(
+                data,
+                dict,
+            ):
                 return data
 
     except (
@@ -184,51 +240,81 @@ def save_to_json(data):
 
 
 # ============================================================
-# SUPABASE
+# SUPABASE HEADERS
 # ============================================================
 
-def supabase_headers(prefer=None):
+def supabase_headers(
+    prefer=None,
+):
+
     headers = {
-        "apikey": SUPABASE_SERVICE_ROLE_KEY,
-        "Authorization": (
-            f"Bearer {SUPABASE_SERVICE_ROLE_KEY}"
-        ),
-        "Content-Type": "application/json",
+        "apikey":
+            SUPABASE_SERVICE_ROLE_KEY,
+
+        "Authorization":
+            f"Bearer "
+            f"{SUPABASE_SERVICE_ROLE_KEY}",
+
+        "Content-Type":
+            "application/json",
     }
 
     if prefer:
-        headers["Prefer"] = prefer
+        headers[
+            "Prefer"
+        ] = prefer
 
     return headers
 
 
+# ============================================================
+# SLET GAMLE PLADER
+# ============================================================
+
 def delete_old_plates_from_supabase():
     """
-    Beholder i dag + de to foregående kalenderdage.
+    Beholder KUN:
 
-    Eksempel:
-    Hvis i dag er 10/8:
-    behold 8/8, 9/8 og 10/8.
-    Slet alt før 8/8.
+    - i dag
+    - i går
+
+    Hvis programmet fx kører 10. august:
+
+    behold:
+        9. august
+        10. august
+
+    slet:
+        alt før 9. august
     """
 
     if (
         not SUPABASE_URL
-        or not SUPABASE_SERVICE_ROLE_KEY
+        or
+        not SUPABASE_SERVICE_ROLE_KEY
     ):
         print(
             "⚠️ Mangler Supabase credentials. "
             "Springer oprydning over."
         )
+
         return False
 
     today = datetime.now(
         COPENHAGEN
     ).date()
 
+    yesterday = (
+        today
+        -
+        timedelta(
+            days=1
+        )
+    )
+
     cutoff_date = (
-        today - timedelta(days=2)
-    ).isoformat()
+        yesterday.isoformat()
+    )
 
     url = (
         f"{SUPABASE_URL}"
@@ -252,42 +338,157 @@ def delete_old_plates_from_supabase():
                 f"{response.status_code} "
                 f"{response.text}"
             )
+
             return False
 
         print(
-            f"🧹 Supabase: slettet plader før {cutoff_date}."
+            "🧹 Supabase opryddet."
+        )
+
+        print(
+            f"   Beholder kun {yesterday} "
+            f"og {today}."
         )
 
         return True
 
     except Exception as error:
         print(
-            f"❌ Fejl ved Supabase-oprydning: {error}"
+            "❌ Fejl ved "
+            f"Supabase-oprydning: {error}"
         )
 
         return False
 
 
-def upload_batch_to_supabase(entries):
-    """
-    Sender alle fundne plader i én batch.
+# ============================================================
+# HENT ALLEREDE BEHANDLEDE PLADER
+# ============================================================
 
-    Dubletter på company + plate ignoreres.
+def get_existing_plates_from_supabase():
     """
+    Henter nummerplader som allerede findes
+    i Supabase.
 
-    if not entries:
-        print(
-            "ℹ️ Ingen nye/relevante plader at sende."
-        )
-        return 0
+    Disse plader springes over FØR
+    forsikringsopslag.
+
+    Det er afgørende for hastigheden.
+    """
 
     if (
         not SUPABASE_URL
-        or not SUPABASE_SERVICE_ROLE_KEY
+        or
+        not SUPABASE_SERVICE_ROLE_KEY
     ):
         print(
             "⚠️ Mangler Supabase credentials."
         )
+
+        return set()
+
+    existing = set()
+
+    limit = 1000
+    offset = 0
+
+    print("")
+    print(
+        "🔎 Henter allerede behandlede "
+        "nummerplader fra Supabase..."
+    )
+
+    while True:
+
+        url = (
+            f"{SUPABASE_URL}"
+            "/rest/v1/plates"
+            "?select=plate"
+            f"&limit={limit}"
+            f"&offset={offset}"
+        )
+
+        try:
+            response = requests.get(
+                url,
+                headers=supabase_headers(),
+                timeout=30,
+            )
+
+            if response.status_code != 200:
+                print(
+                    "⚠️ Kunne ikke hente "
+                    "eksisterende plader: "
+                    f"{response.status_code} "
+                    f"{response.text}"
+                )
+
+                break
+
+            rows = response.json()
+
+            for row in rows:
+
+                plate = str(
+                    row.get(
+                        "plate",
+                        "",
+                    )
+                ).upper().strip()
+
+                if plate:
+                    existing.add(
+                        plate
+                    )
+
+            if len(rows) < limit:
+                break
+
+            offset += limit
+
+        except Exception as error:
+
+            print(
+                "⚠️ Fejl ved læsning "
+                f"fra Supabase: {error}"
+            )
+
+            break
+
+    print(
+        f"✅ {len(existing)} plader "
+        "er allerede behandlet."
+    )
+
+    return existing
+
+
+# ============================================================
+# UPLOAD TIL SUPABASE
+# ============================================================
+
+def upload_batch_to_supabase(
+    entries,
+):
+
+    if not entries:
+
+        print(
+            "ℹ️ Ingen nye plader "
+            "at sende til Supabase."
+        )
+
+        return 0
+
+    if (
+        not SUPABASE_URL
+        or
+        not SUPABASE_SERVICE_ROLE_KEY
+    ):
+        print(
+            "⚠️ Mangler Supabase credentials."
+        )
+
         return 0
 
     url = (
@@ -301,68 +502,103 @@ def upload_batch_to_supabase(entries):
         "return=minimal"
     )
 
-    try:
-        response = requests.post(
-            url,
-            headers=headers,
-            json=entries,
-            timeout=45,
-        )
+    uploaded = 0
 
-        if response.status_code in (
-            200,
-            201,
-            204,
-        ):
-            print(
-                f"✅ Supabase accepterede/ignorerede "
-                f"{len(entries)} plader."
+    # Send højst 250 ad gangen
+    for batch in chunks(
+        entries,
+        250,
+    ):
+
+        try:
+            response = requests.post(
+                url,
+                headers=headers,
+                json=batch,
+                timeout=45,
             )
 
-            return len(entries)
+            if response.status_code in (
+                200,
+                201,
+                204,
+            ):
 
-        print(
-            "❌ Supabase batch-upload fejlede: "
-            f"{response.status_code} "
-            f"{response.text}"
-        )
+                uploaded += len(
+                    batch
+                )
 
-        return 0
+                print(
+                    "✅ Supabase batch: "
+                    f"{len(batch)} plader."
+                )
 
-    except Exception as error:
-        print(
-            f"❌ Supabase upload-fejl: {error}"
-        )
+                continue
 
-        return 0
+            print(
+                "❌ Supabase batch-upload "
+                "fejlede: "
+                f"{response.status_code} "
+                f"{response.text}"
+            )
+
+        except Exception as error:
+
+            print(
+                "❌ Supabase upload-fejl: "
+                f"{error}"
+            )
+
+    return uploaded
 
 
 # ============================================================
-# BILOPSLAG ADVANCED SEARCH
+# ADVANCED SEARCH
 # ============================================================
 
 def hent_registrerede_koeretoejer():
     """
-    Henter biler med registration_status=Registreret
-    fra i dag og to dage tilbage.
+    Henter registreringer fra:
 
-    Datoerne beregnes automatisk hver gang programmet kører.
+    I DAG
+    +
+    I GÅR
+
+    Datoerne beregnes automatisk.
     """
 
     today = datetime.now(
         COPENHAGEN
     ).date()
 
-    from_date = (
-        today - timedelta(days=2)
+    yesterday = (
+        today
+        -
+        timedelta(
+            days=1
+        )
     )
 
     print("")
-    print("==========================================")
-    print("HENTER REGISTRERINGER FRA BILOPSLAG")
-    print("==========================================")
-    print(f"Fra: {from_date.isoformat()}")
-    print(f"Til: {today.isoformat()}")
+    print(
+        "=========================================="
+    )
+
+    print(
+        "HENTER REGISTRERINGER FRA BILOPSLAG"
+    )
+
+    print(
+        "=========================================="
+    )
+
+    print(
+        f"Fra: {yesterday.isoformat()}"
+    )
+
+    print(
+        f"Til: {today.isoformat()}"
+    )
 
     base_url = (
         f"{BILOPSLAG_BASE_URL}"
@@ -370,29 +606,34 @@ def hent_registrerede_koeretoejer():
     )
 
     base_params = {
-        "registration_status_in[]": "Registreret",
-        "registration_status_updated_at_gteq": (
-            from_date.isoformat()
-        ),
-        "registration_status_updated_at_lteq": (
-            today.isoformat()
-        ),
+
+        "registration_status_in[]":
+            "Registreret",
+
+        "registration_status_updated_at_gteq":
+            yesterday.isoformat(),
+
+        "registration_status_updated_at_lteq":
+            today.isoformat(),
     }
 
     vehicles = {}
 
     page = 1
+
     total_pages = None
 
     while True:
+
         params = {
             **base_params,
             "page": page,
         }
 
         try:
+
             print(
-                f"\n🔎 Henter side {page}"
+                f"🔎 Henter side {page}"
             )
 
             response = requests.get(
@@ -416,7 +657,12 @@ def hent_registrerede_koeretoejer():
                 [],
             )
 
+            # --------------------------------------------
+            # FØRSTE SIDE
+            # --------------------------------------------
+
             if total_pages is None:
+
                 total_pages = int(
                     payload.get(
                         "total_pages",
@@ -433,14 +679,21 @@ def hent_registrerede_koeretoejer():
 
                 print(
                     f"📊 {total_count} køretøjer "
-                    f"fordelt på {total_pages} sider."
+                    f"fordelt på "
+                    f"{total_pages} sider."
                 )
 
             print(
-                f"→ {len(cars)} biler på side {page}"
+                f"→ {len(cars)} biler "
+                f"på side {page}"
             )
 
+            # --------------------------------------------
+            # BILER
+            # --------------------------------------------
+
             for car in cars:
+
                 registration = str(
                     car.get(
                         "registration",
@@ -482,28 +735,47 @@ def hent_registrerede_koeretoejer():
                 if not status_date:
                     continue
 
+                # Ekstra sikkerhed:
+                # Accepter kun i dag/i går.
+
+                if status_date not in (
+                    today,
+                    yesterday,
+                ):
+                    continue
+
                 vehicles[
                     registration
                 ] = {
-                    "id": vehicle_id,
-                    "registration": registration,
-                    "vin": str(
-                        car.get(
-                            "vin",
-                            "",
-                        )
-                    ).upper().strip(),
-                    "registration_status_updated_at": (
-                        status_date
-                    ),
-                    "first_registration_date": (
+
+                    "id":
+                        vehicle_id,
+
+                    "registration":
+                        registration,
+
+                    "vin":
+                        str(
+                            car.get(
+                                "vin",
+                                "",
+                            )
+                        ).upper().strip(),
+
+                    "registration_status_updated_at":
+                        status_date,
+
+                    "first_registration_date":
                         parse_date(
                             car.get(
                                 "first_registration_date"
                             )
-                        )
-                    ),
+                        ),
                 }
+
+            # --------------------------------------------
+            # PAGINATION
+            # --------------------------------------------
 
             has_more = bool(
                 payload.get(
@@ -517,16 +789,20 @@ def hent_registrerede_koeretoejer():
 
             if (
                 total_pages is not None
-                and page >= total_pages
+                and
+                page >= total_pages
             ):
                 break
 
             page += 1
 
         except Exception as error:
+
             print(
-                f"❌ Fejl på side {page}: {error}"
+                f"❌ Fejl på side {page}: "
+                f"{error}"
             )
+
             break
 
     result = list(
@@ -534,16 +810,18 @@ def hent_registrerede_koeretoejer():
     )
 
     print("")
+
     print(
         f"🎯 Fandt {len(result)} "
-        "unikke registrerede køretøjer."
+        "unikke registrerede køretøjer "
+        "fra i dag/i går."
     )
 
     return result
 
 
 # ============================================================
-# FORSIKRING FRA BILOPSLAG
+# FORSIKRING
 # ============================================================
 
 async def get_insurance_info(
@@ -551,11 +829,6 @@ async def get_insurance_info(
     vehicle,
     semaphore,
 ):
-    """
-    Bruger vehicle.id direkte fra advanced_search.
-
-    Dermed behøver vi IKKE åbne /nummerplade/... først.
-    """
 
     regnr = vehicle[
         "registration"
@@ -572,16 +845,24 @@ async def get_insurance_info(
     )
 
     headers = {
-        "Accept": "application/json",
-        "X-Requested-With": "XMLHttpRequest",
-        "Referer": (
-            f"{BILOPSLAG_BASE_URL}"
-            f"/nummerplade/{regnr}"
-        ),
+
+        "Accept":
+            "application/json",
+
+        "X-Requested-With":
+            "XMLHttpRequest",
+
+        "Referer":
+            (
+                f"{BILOPSLAG_BASE_URL}"
+                f"/nummerplade/{regnr}"
+            ),
     }
 
     async with semaphore:
+
         try:
+
             async with session.get(
                 url,
                 headers=headers,
@@ -590,27 +871,30 @@ async def get_insurance_info(
                 ),
             ) as response:
 
-                if response.status == 403:
-                    print(
-                        f"⛔ {regnr}: DMR HTTP 403"
-                    )
-                    return None
-
-                if response.status == 429:
-                    print(
-                        f"⚠️ {regnr}: DMR HTTP 429"
-                    )
-                    return None
+                # ----------------------------------------
+                # HTTP FEJL
+                # ----------------------------------------
 
                 if response.status != 200:
-                    print(
-                        f"⚠️ {regnr}: "
-                        f"DMR HTTP {response.status}"
-                    )
-                    return None
 
-                payload = await response.json(
-                    content_type=None
+                    return {
+                        "success": False,
+
+                        "plate":
+                            regnr,
+
+                        "http_status":
+                            response.status,
+                    }
+
+                # ----------------------------------------
+                # JSON
+                # ----------------------------------------
+
+                payload = (
+                    await response.json(
+                        content_type=None
+                    )
                 )
 
                 dmr_data = (
@@ -640,62 +924,60 @@ async def get_insurance_info(
                     )
                 )
 
-                if (
-                    not company
-                    or company == "Ukendt"
-                ):
-                    return None
-
                 return {
-                    "plate": regnr,
-                    "company": company,
-                    "insurance_status": (
-                        insurance_status
-                    ),
-                    "insurance_date": (
-                        insurance_date
-                    ),
-                    "registration_status_date": (
+
+                    "success":
+                        (
+                            company
+                            !=
+                            "Ukendt"
+                        ),
+
+                    "plate":
+                        regnr,
+
+                    "company":
+                        company,
+
+                    "insurance_status":
+                        insurance_status,
+
+                    "insurance_date":
+                        insurance_date,
+
+                    "registration_status_date":
                         vehicle[
                             "registration_status_updated_at"
-                        ]
-                    ),
+                        ],
                 }
 
         except (
             aiohttp.ClientError,
             asyncio.TimeoutError,
             ValueError,
-        ) as error:
+        ):
 
-            print(
-                f"⚠️ Forsikringsfejl "
-                f"for {regnr}: {error}"
-            )
+            return {
+                "success": False,
 
-            return None
+                "plate":
+                    regnr,
+
+                "http_status":
+                    "error",
+            }
 
 
 # ============================================================
-# HOVEDPROGRAM
+# FORSIKRINGSOPSLAG MED LIVE STATUS
 # ============================================================
 
-async def check_new_registrations():
-    vehicles = (
-        hent_registrerede_koeretoejer()
-    )
+async def process_insurance_requests(
+    vehicles,
+):
 
     if not vehicles:
-        print(
-            "Ingen køretøjer fundet."
-        )
-        return
-
-    print("")
-    print(
-        f"Starter forsikringsopslag "
-        f"for {len(vehicles)} køretøjer."
-    )
+        return []
 
     connector = aiohttp.TCPConnector(
         limit=MAX_CONNECTIONS,
@@ -706,6 +988,8 @@ async def check_new_registrations():
         MAX_CONNECTIONS
     )
 
+    results = []
+
     async with aiohttp.ClientSession(
         connector=connector,
         headers=BILOPSLAG_HEADERS,
@@ -713,25 +997,250 @@ async def check_new_registrations():
     ) as session:
 
         tasks = [
-            get_insurance_info(
-                session,
-                vehicle,
-                semaphore,
+
+            asyncio.create_task(
+                get_insurance_info(
+                    session,
+                    vehicle,
+                    semaphore,
+                )
             )
-            for vehicle in vehicles
+
+            for vehicle
+            in vehicles
         ]
 
-        results = await asyncio.gather(
-            *tasks
+        total = len(
+            tasks
         )
 
-    plates_data = load_existing_data()
+        completed = 0
+
+        successful = 0
+
+        failed = 0
+
+        print("")
+
+        print(
+            "=========================================="
+        )
+
+        print(
+            "FORSIKRINGSOPSLAG"
+        )
+
+        print(
+            "=========================================="
+        )
+
+        print(
+            f"Starter opslag for "
+            f"{total} NYE nummerplader."
+        )
+
+        print("")
+
+        for future in asyncio.as_completed(
+            tasks
+        ):
+
+            result = await future
+
+            completed += 1
+
+            if (
+                result
+                and
+                result.get(
+                    "success"
+                )
+            ):
+
+                successful += 1
+
+                results.append(
+                    result
+                )
+
+            else:
+
+                failed += 1
+
+            # --------------------------------------------
+            # LIVE PROGRESS
+            # --------------------------------------------
+
+            if (
+                completed
+                %
+                PROGRESS_EVERY
+                ==
+                0
+                or
+                completed
+                ==
+                total
+            ):
+
+                percent = (
+                    completed
+                    /
+                    total
+                    *
+                    100
+                )
+
+                print(
+                    f"⏳ "
+                    f"{completed}/{total} "
+                    f"({percent:.1f}%) | "
+                    f"med forsikring: "
+                    f"{successful} | "
+                    f"fejl/uden selskab: "
+                    f"{failed}"
+                )
+
+    return results
+
+
+# ============================================================
+# HOVEDPROGRAM
+# ============================================================
+
+async def check_new_registrations():
+
+    # ========================================================
+    # 1. ADVANCED SEARCH
+    # ========================================================
+
+    vehicles = (
+        hent_registrerede_koeretoejer()
+    )
+
+    if not vehicles:
+
+        print(
+            "Ingen køretøjer fundet."
+        )
+
+        return
+
+
+    # ========================================================
+    # 2. HENT ALLEREDE BEHANDLEDE
+    # ========================================================
+
+    existing_plates = (
+        get_existing_plates_from_supabase()
+    )
+
+
+    # ========================================================
+    # 3. FJERN ALLEREDE BEHANDLEDE
+    # ========================================================
+
+    new_vehicles = [
+
+        vehicle
+
+        for vehicle
+        in vehicles
+
+        if (
+            vehicle[
+                "registration"
+            ]
+            not in
+            existing_plates
+        )
+    ]
+
+
+    skipped = (
+        len(vehicles)
+        -
+        len(new_vehicles)
+    )
+
+
+    # ========================================================
+    # STATUS
+    # ========================================================
+
+    print("")
+
+    print(
+        "=========================================="
+    )
+
+    print(
+        "FILTRERING"
+    )
+
+    print(
+        "=========================================="
+    )
+
+    print(
+        f"Fundet hos Bilopslag: "
+        f"{len(vehicles)}"
+    )
+
+    print(
+        f"Allerede behandlet: "
+        f"{skipped}"
+    )
+
+    print(
+        f"NYE nummerplader: "
+        f"{len(new_vehicles)}"
+    )
+
+
+    # ========================================================
+    # INTET NYT?
+    # ========================================================
+
+    if not new_vehicles:
+
+        print("")
+
+        print(
+            "✅ Ingen nye nummerplader."
+        )
+
+        print(
+            "Der foretages derfor "
+            "0 forsikringsrequests."
+        )
+
+        return
+
+
+    # ========================================================
+    # 4. FORSIKRING
+    # ========================================================
+
+    results = (
+        await process_insurance_requests(
+            new_vehicles
+        )
+    )
+
+
+    # ========================================================
+    # 5. BYG DATA
+    # ========================================================
 
     entries = []
 
+    plates_data = (
+        load_existing_data()
+    )
+
+
     for result in results:
-        if not result:
-            continue
 
         plate = result[
             "plate"
@@ -741,85 +1250,105 @@ async def check_new_registrations():
             "company"
         ]
 
-        registration_date = result[
+        entry_date = result[
             "registration_status_date"
         ]
 
-        insurance_date = result[
-            "insurance_date"
-        ]
-
-        insurance_status = result[
-            "insurance_status"
-        ]
-
-        # Gem registration_status_updated_at som hoveddato.
-        # Det matcher den søgning, vi har brugt.
-        entry_date = registration_date
 
         entry = {
-            "company": company,
-            "plate": plate,
-            "date": entry_date.isoformat(),
-            "checked": False,
-            "premium": 0,
-            "note": "",
+
+            "company":
+                company,
+
+            "plate":
+                plate,
+
+            "date":
+                entry_date.isoformat(),
+
+            "checked":
+                False,
+
+            "premium":
+                0,
+
+            "note":
+                "",
         }
+
 
         entries.append(
             entry
         )
 
-        # Lokal JSON backup
+
+        # --------------------------------------------
+        # LOKAL JSON BACKUP
+        # --------------------------------------------
+
         if company not in plates_data:
+
             plates_data[
                 company
             ] = []
 
-        existing = {
+
+        existing_local = {
+
             item.get(
                 "plate"
             )
+
             for item
             in plates_data[
                 company
             ]
         }
 
-        if plate not in existing:
+
+        if (
+            plate
+            not in
+            existing_local
+        ):
+
             plates_data[
                 company
             ].append(
                 {
-                    "plate": plate,
-                    "date": (
-                        entry_date.isoformat()
-                    ),
-                    "checked": False,
-                    "premium": 0,
-                    "note": "",
+
+                    "plate":
+                        plate,
+
+                    "date":
+                        entry_date.isoformat(),
+
+                    "checked":
+                        False,
+
+                    "premium":
+                        0,
+
+                    "note":
+                        "",
                 }
             )
 
-        print(
-            f"✅ {plate} | "
-            f"{company} | "
-            f"registreringsændring: "
-            f"{entry_date} | "
-            f"forsikring: "
-            f"{insurance_status} | "
-            f"forsikringsdato: "
-            f"{insurance_date or 'ukendt'}"
-        )
 
-    # Fjern dubletter inden upload
+    # ========================================================
+    # 6. FJERN DUBLETTER
+    # ========================================================
+
     unique_entries = {}
 
+
     for entry in entries:
+
         key = (
             entry[
                 "company"
             ],
+
             entry[
                 "plate"
             ],
@@ -829,9 +1358,15 @@ async def check_new_registrations():
             key
         ] = entry
 
+
     final_entries = list(
         unique_entries.values()
     )
+
+
+    # ========================================================
+    # 7. SUPABASE
+    # ========================================================
 
     uploaded = (
         upload_batch_to_supabase(
@@ -839,19 +1374,49 @@ async def check_new_registrations():
         )
     )
 
+
+    # ========================================================
+    # 8. LOKAL JSON
+    # ========================================================
+
     if final_entries:
+
         save_to_json(
             plates_data
         )
 
+
+    # ========================================================
+    # RESULTAT
+    # ========================================================
+
     print("")
-    print("==========================================")
-    print("RESULTAT")
-    print("==========================================")
 
     print(
-        f"Køretøjer fra advanced search: "
+        "=========================================="
+    )
+
+    print(
+        "RESULTAT"
+    )
+
+    print(
+        "=========================================="
+    )
+
+    print(
+        f"Bilopslag-resultater: "
         f"{len(vehicles)}"
+    )
+
+    print(
+        f"Allerede behandlet: "
+        f"{skipped}"
+    )
+
+    print(
+        f"Nye nummerplader: "
+        f"{len(new_vehicles)}"
     )
 
     print(
@@ -860,7 +1425,7 @@ async def check_new_registrations():
     )
 
     print(
-        f"Sendt/ignoreret i Supabase: "
+        f"Uploadet/ignoreret i Supabase: "
         f"{uploaded}"
     )
 
@@ -870,16 +1435,26 @@ async def check_new_registrations():
 # ============================================================
 
 if __name__ == "__main__":
+
+    print("")
     print(
         "Bilopslag scraper startet."
     )
 
+    print(
+        f"Tidspunkt: "
+        f"{datetime.now(COPENHAGEN)}"
+    )
+
+    # Fjern data ældre end i går
     delete_old_plates_from_supabase()
 
+    # Kør
     asyncio.run(
         check_new_registrations()
     )
 
+    print("")
     print(
         "Bilopslag scraper færdig."
     )
