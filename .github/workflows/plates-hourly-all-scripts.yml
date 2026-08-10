@@ -1,28 +1,39 @@
-name: Update plates every 30 minutes
+name: Update plates every 15 minutes
 
 on:
   schedule:
-    # Ca. hvert 30. minut.
-    # 07 og 37 min over timen for at undgå GitHubs travleste cron-tidspunkter.
-    - cron: "7,37 * * * *"
+    # Kører hvert 15. minut:
+    # xx:02, xx:17, xx:32 og xx:47
+    #
+    # Jeg forskyder den 2 minutter fra 00/15/30/45,
+    # fordi GitHub ofte er mere belastet præcis på kvartererne.
+    - cron: "2,17,32,47 * * * *"
 
-  # Mulighed for manuel start
+  # Gør det muligt at starte workflowet manuelt
   workflow_dispatch:
 
 jobs:
-
-  # ==========================================================
-  # BILOPSLAG
-  # ==========================================================
-
   bilopslag:
     name: Bilopslag
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+
+    # Det nye script bør være langt hurtigere end de gamle.
+    # Hvis noget går galt, stopper GitHub jobbet efter 30 min.
+    timeout-minutes: 30
 
     steps:
+
+      # ======================================================
+      # 1. HENT REPOSITORY
+      # ======================================================
+
       - name: Checkout repository
         uses: actions/checkout@v4
+
+
+      # ======================================================
+      # 2. PYTHON
+      # ======================================================
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -30,10 +41,20 @@ jobs:
           python-version: "3.11"
           cache: "pip"
 
+
+      # ======================================================
+      # 3. INSTALLER PAKKER
+      # ======================================================
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+
+      # ======================================================
+      # 4. KØR DET ENESTE SCRAPER-SCRIPT
+      # ======================================================
 
       - name: Run Bilopslag scraper
         env:
@@ -41,127 +62,13 @@ jobs:
 
           BILOPSLAG_COOKIES_JSON: ${{ secrets.BILOPSLAG_COOKIES_JSON }}
 
-          NUMMERPLADE_COOKIES_JSON: ${{ secrets.NUMMERPLADE_COOKIES_JSON }}
-
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
 
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
-          MAX_CONNECTIONS: "8"
+          MAX_CONNECTIONS: "12"
+
+          REQUEST_TIMEOUT: "25"
 
         run: |
           python -u "bilopslag.nu.sky.py"
-
-
-  # ==========================================================
-  # EN
-  # ==========================================================
-
-  en:
-    name: EN
-    runs-on: ubuntu-latest
-    timeout-minutes: 120
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: "pip"
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Verify EN configuration
-        run: |
-          echo "Kontrollerer EN-script..."
-          grep 'PREFIX =' "EN_med_print_til_plates_supabase.py"
-          grep 'START_NUMBER' "EN_med_print_til_plates_supabase.py" || true
-          grep 'END_NUMBER' "EN_med_print_til_plates_supabase.py" || true
-
-      - name: Run EN scraper
-        env:
-          JSON_FILE_PATH: /tmp/plates-en.json
-
-          NUMMERPLADE_COOKIES_JSON: ${{ secrets.NUMMERPLADE_COOKIES_JSON }}
-
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-
-          START_NUMBER: "10000"
-
-          END_NUMBER: "99999"
-
-          MAX_CONNECTIONS: "6"
-
-          SCAN_BATCH_SIZE: "250"
-
-          MAX_RETRIES: "2"
-
-          REQUEST_TIMEOUT_SECONDS: "20"
-
-        run: |
-          python -u "EN_med_print_til_plates_supabase.py"
-
-
-  # ==========================================================
-  # EP
-  # ==========================================================
-
-  ep:
-    name: EP
-    runs-on: ubuntu-latest
-    timeout-minutes: 120
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: "pip"
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Verify EP configuration
-        run: |
-          echo "Kontrollerer EP-script..."
-          grep 'PREFIX =' "EP_med_print_til_plates_json_supabase.py"
-          grep 'START_NUMBER' "EP_med_print_til_plates_json_supabase.py" || true
-          grep 'END_NUMBER' "EP_med_print_til_plates_json_supabase.py" || true
-
-      - name: Run EP scraper
-        env:
-          JSON_FILE_PATH: /tmp/plates-ep.json
-
-          NUMMERPLADE_COOKIES_JSON: ${{ secrets.NUMMERPLADE_COOKIES_JSON }}
-
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-
-          START_NUMBER: "10000"
-
-          END_NUMBER: "99999"
-
-          MAX_CONNECTIONS: "6"
-
-          SCAN_BATCH_SIZE: "250"
-
-          MAX_RETRIES: "2"
-
-          REQUEST_TIMEOUT_SECONDS: "20"
-
-        run: |
-          python -u "EP_med_print_til_plates_json_supabase.py"
