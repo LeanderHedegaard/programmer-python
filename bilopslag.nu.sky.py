@@ -8,7 +8,6 @@ import requests
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from pathlib import Path
-from bs4 import BeautifulSoup
 
 
 # ============================================================
@@ -41,7 +40,7 @@ SUPABASE_SERVICE_ROLE_KEY = os.getenv(
 
 
 # ============================================================
-# COOKIES
+# BILOPSLAG COOKIES
 # ============================================================
 
 try:
@@ -52,22 +51,10 @@ try:
         ) or "{}"
     )
 except json.JSONDecodeError:
-    print("⚠️ BILOPSLAG_COOKIES_JSON er ugyldig JSON.")
-    BILOPSLAG_COOKIES = {}
-
-
-# Nummerplade.net cookies er VALGFRIE.
-# Scriptet kan fungere uden, hvis siden leverer HTML offentligt.
-try:
-    NUMMERPLADE_COOKIES = json.loads(
-        os.getenv(
-            "NUMMERPLADE_COOKIES_JSON",
-            "",
-        ) or "{}"
+    print(
+        "⚠️ BILOPSLAG_COOKIES_JSON er ugyldig JSON."
     )
-except json.JSONDecodeError:
-    print("⚠️ NUMMERPLADE_COOKIES_JSON er ugyldig JSON.")
-    NUMMERPLADE_COOKIES = {}
+    BILOPSLAG_COOKIES = {}
 
 
 # ============================================================
@@ -82,14 +69,16 @@ BILOPSLAG_BASE_URL = (
     "https://bilopslag.nu"
 )
 
-NUMMERPLADE_BASE_URL = (
-    "https://www.nummerplade.net"
+TJEKBIL_BASE_URL = (
+    "https://www.tjekbil.dk"
 )
 
+# Moderat concurrency med vilje.
+# 6 er langt mere skånsomt end 20-40 samtidige requests.
 MAX_CONNECTIONS = int(
     os.getenv(
         "MAX_CONNECTIONS",
-        "10",
+        "6",
     )
 )
 
@@ -100,17 +89,27 @@ REQUEST_TIMEOUT = int(
     )
 )
 
-MAX_RETRIES = int(
-    os.getenv(
-        "MAX_RETRIES",
-        "2",
-    )
-)
-
 PROGRESS_EVERY = int(
     os.getenv(
         "PROGRESS_EVERY",
         "25",
+    )
+)
+
+# Lille pause mellem batches.
+BATCH_PAUSE_SECONDS = float(
+    os.getenv(
+        "BATCH_PAUSE_SECONDS",
+        "0.5",
+    )
+)
+
+# Hvis Tjekbil begynder at afvise mange requests,
+# stopper vi i stedet for at fortsætte blindt.
+MAX_HTTP_ERRORS_BEFORE_ABORT = int(
+    os.getenv(
+        "MAX_HTTP_ERRORS_BEFORE_ABORT",
+        "30",
     )
 )
 
@@ -125,28 +124,20 @@ PLADE_REGEX = re.compile(
 
 BILOPSLAG_HEADERS = {
     "accept": "*/*",
-
     "accept-language": (
         "da-DK,da;q=0.9,"
         "en-US;q=0.8,"
         "en;q=0.7"
     ),
-
     "cache-control": "no-cache",
-
     "pragma": "no-cache",
-
     "referer": (
         "https://bilopslag.nu/"
         "avanceret-soegning"
     ),
-
     "sec-fetch-dest": "empty",
-
     "sec-fetch-mode": "cors",
-
     "sec-fetch-site": "same-origin",
-
     "user-agent": (
         "Mozilla/5.0 "
         "(Windows NT 10.0; Win64; x64) "
@@ -159,32 +150,17 @@ BILOPSLAG_HEADERS = {
 
 
 # ============================================================
-# HEADERS - NUMMERPLADE.NET
+# HEADERS - TJEKBIL
 # ============================================================
 
-NUMMERPLADE_HEADERS = {
-    "accept": (
-        "text/html,"
-        "application/xhtml+xml,"
-        "application/xml;q=0.9,"
-        "image/avif,"
-        "image/webp,"
-        "image/apng,"
-        "*/*;q=0.8"
-    ),
-
+TJEKBIL_HEADERS = {
+    "accept": "*/*",
     "accept-language": (
         "da-DK,da;q=0.9,"
         "en-US;q=0.8,"
         "en;q=0.7"
     ),
-
-    "cache-control": "no-cache",
-
-    "pragma": "no-cache",
-
-    "upgrade-insecure-requests": "1",
-
+    "source": "web",
     "user-agent": (
         "Mozilla/5.0 "
         "(Windows NT 10.0; Win64; x64) "
@@ -204,13 +180,13 @@ def parse_date(value):
     if not value:
         return None
 
-    value = str(
-        value
-    ).strip()
+    value = str(value).strip()
 
     for fmt in (
         "%Y-%m-%d",
         "%d-%m-%Y",
+        "%Y-%m-%dT%H:%M:%S",
+        "%Y-%m-%dT%H:%M:%S.%f",
         "%d.%m.%Y",
     ):
         try:
@@ -218,7 +194,6 @@ def parse_date(value):
                 value,
                 fmt,
             ).date()
-
         except ValueError:
             continue
 
@@ -304,14 +279,15 @@ def save_to_json(data):
 def supabase_headers(
     prefer=None,
 ):
-
     headers = {
         "apikey":
             SUPABASE_SERVICE_ROLE_KEY,
 
         "Authorization":
-            f"Bearer "
-            f"{SUPABASE_SERVICE_ROLE_KEY}",
+            (
+                f"Bearer "
+                f"{SUPABASE_SERVICE_ROLE_KEY}"
+            ),
 
         "Content-Type":
             "application/json",
@@ -326,17 +302,14 @@ def supabase_headers(
 
 
 # ============================================================
-# SLET GAMLE PLADER
+# SLET GAMLE PLADER FRA SUPABASE
 # ============================================================
 
 def delete_old_plates_from_supabase():
     """
     Beholder kun:
-
     - i dag
     - i går
-
-    Alt ældre slettes.
     """
 
     if (
@@ -348,7 +321,6 @@ def delete_old_plates_from_supabase():
             "⚠️ Mangler Supabase credentials. "
             "Springer oprydning over."
         )
-
         return False
 
     today = datetime.now(
@@ -356,11 +328,7 @@ def delete_old_plates_from_supabase():
     ).date()
 
     yesterday = (
-        today
-        -
-        timedelta(
-            days=1
-        )
+        today - timedelta(days=1)
     )
 
     cutoff_date = (
@@ -389,7 +357,6 @@ def delete_old_plates_from_supabase():
                 f"{response.status_code} "
                 f"{response.text}"
             )
-
             return False
 
         print(
@@ -405,10 +372,9 @@ def delete_old_plates_from_supabase():
 
     except Exception as error:
         print(
-            "❌ Fejl ved "
-            f"Supabase-oprydning: {error}"
+            f"❌ Supabase-oprydningsfejl: "
+            f"{error}"
         )
-
         return False
 
 
@@ -418,8 +384,9 @@ def delete_old_plates_from_supabase():
 
 def get_existing_plates_from_supabase():
     """
-    Alle plader som allerede findes i Supabase
-    springes over INDEN opslag på Nummerplade.net.
+    Henter alle plader som allerede findes i Supabase.
+
+    De springes over før Tjekbil-kaldet.
     """
 
     if (
@@ -430,7 +397,6 @@ def get_existing_plates_from_supabase():
         print(
             "⚠️ Mangler Supabase credentials."
         )
-
         return set()
 
     existing = set()
@@ -445,7 +411,6 @@ def get_existing_plates_from_supabase():
     )
 
     while True:
-
         url = (
             f"{SUPABASE_URL}"
             "/rest/v1/plates"
@@ -462,19 +427,16 @@ def get_existing_plates_from_supabase():
             )
 
             if response.status_code != 200:
-
                 print(
                     "⚠️ Supabase GET fejlede: "
                     f"{response.status_code} "
                     f"{response.text}"
                 )
-
                 break
 
             rows = response.json()
 
             for row in rows:
-
                 plate = str(
                     row.get(
                         "plate",
@@ -493,12 +455,10 @@ def get_existing_plates_from_supabase():
             offset += limit
 
         except Exception as error:
-
             print(
                 "⚠️ Fejl ved læsning "
                 f"fra Supabase: {error}"
             )
-
             break
 
     print(
@@ -510,20 +470,17 @@ def get_existing_plates_from_supabase():
 
 
 # ============================================================
-# UPLOAD TIL SUPABASE
+# SUPABASE BATCH UPLOAD
 # ============================================================
 
 def upload_batch_to_supabase(
     entries,
 ):
-
     if not entries:
-
         print(
             "ℹ️ Ingen nye plader "
             "at sende til Supabase."
         )
-
         return 0
 
     if (
@@ -534,7 +491,6 @@ def upload_batch_to_supabase(
         print(
             "⚠️ Mangler Supabase credentials."
         )
-
         return 0
 
     url = (
@@ -554,7 +510,6 @@ def upload_batch_to_supabase(
         entries,
         250,
     ):
-
         try:
             response = requests.post(
                 url,
@@ -568,7 +523,6 @@ def upload_batch_to_supabase(
                 201,
                 204,
             ):
-
                 uploaded += len(
                     batch
                 )
@@ -587,9 +541,8 @@ def upload_batch_to_supabase(
             )
 
         except Exception as error:
-
             print(
-                "❌ Supabase upload-fejl: "
+                f"❌ Supabase upload-fejl: "
                 f"{error}"
             )
 
@@ -597,15 +550,13 @@ def upload_batch_to_supabase(
 
 
 # ============================================================
-# BILOPSLAG - ADVANCED SEARCH
+# BILOPSLAG ADVANCED SEARCH
 # ============================================================
 
 def hent_registrerede_koeretoejer():
     """
-    Henter biler der er blevet registreret:
-
-    - i dag
-    - i går
+    Henter alle biler med status Registreret
+    fra i dag og i går.
     """
 
     today = datetime.now(
@@ -613,22 +564,16 @@ def hent_registrerede_koeretoejer():
     ).date()
 
     yesterday = (
-        today
-        -
-        timedelta(
-            days=1
-        )
+        today - timedelta(days=1)
     )
 
     print("")
     print(
         "=========================================="
     )
-
     print(
         "HENTER REGISTRERINGER FRA BILOPSLAG"
     )
-
     print(
         "=========================================="
     )
@@ -647,7 +592,6 @@ def hent_registrerede_koeretoejer():
     )
 
     base_params = {
-
         "registration_status_in[]":
             "Registreret",
 
@@ -664,14 +608,12 @@ def hent_registrerede_koeretoejer():
     total_pages = None
 
     while True:
-
         params = {
             **base_params,
             "page": page,
         }
 
         try:
-
             print(
                 f"🔎 Henter side {page}"
             )
@@ -698,7 +640,6 @@ def hent_registrerede_koeretoejer():
             )
 
             if total_pages is None:
-
                 total_pages = int(
                     payload.get(
                         "total_pages",
@@ -725,7 +666,6 @@ def hent_registrerede_koeretoejer():
             )
 
             for car in cars:
-
                 registration = str(
                     car.get(
                         "registration",
@@ -769,7 +709,6 @@ def hent_registrerede_koeretoejer():
                 vehicles[
                     registration
                 ] = {
-
                     "registration":
                         registration,
 
@@ -810,12 +749,10 @@ def hent_registrerede_koeretoejer():
             page += 1
 
         except Exception as error:
-
             print(
                 f"❌ Fejl på side {page}: "
                 f"{error}"
             )
-
             break
 
     result = list(
@@ -823,7 +760,6 @@ def hent_registrerede_koeretoejer():
     )
 
     print("")
-
     print(
         f"🎯 Fandt {len(result)} "
         "unikke registrerede køretøjer."
@@ -833,211 +769,7 @@ def hent_registrerede_koeretoejer():
 
 
 # ============================================================
-# PARSE FORSIKRING FRA NUMMERPLADE.NET HTML
-# ============================================================
-
-def extract_insurance_from_html(
-    page_html,
-):
-
-    soup = BeautifulSoup(
-        page_html,
-        "html.parser",
-    )
-
-    # ========================================================
-    # PRIMÆR METODE:
-    # detaljeret forsikringskort
-    # ========================================================
-
-    insurance_box = soup.select_one(
-        "#forsikring-card .bb-dom"
-    )
-
-    if insurance_box:
-
-        company_element = (
-            insurance_box.select_one(
-                ".bb-dom-tx > b"
-            )
-        )
-
-        date_element = (
-            insurance_box.select_one(
-                ".fa-nb"
-            )
-        )
-
-        company = normalize_company(
-            company_element.get_text(
-                " ",
-                strip=True,
-            )
-            if company_element
-            else ""
-        )
-
-        date_text = (
-            date_element.get_text(
-                " ",
-                strip=True,
-            )
-            if date_element
-            else ""
-        )
-
-        insurance_date = parse_date(
-            date_text
-        )
-
-        box_text = (
-            insurance_box.get_text(
-                " ",
-                strip=True,
-            ).lower()
-        )
-
-        if "aktiv forsikring" in box_text:
-            status = "Aktiv"
-
-        elif "ophørt" in box_text:
-            status = "Ophørt"
-
-        else:
-            status = "Ukendt"
-
-        if company != "Ukendt":
-
-            return {
-                "company":
-                    company,
-
-                "status":
-                    status,
-
-                "insurance_date":
-                    insurance_date,
-            }
-
-
-    # ========================================================
-    # FALLBACK:
-    # historikrække
-    # ========================================================
-
-    history_rows = soup.select(
-        "#forsikring-card .fa-rk"
-    )
-
-    for row in history_rows:
-
-        company_element = (
-            row.find(
-                "b"
-            )
-        )
-
-        date_element = (
-            row.select_one(
-                ".fa-dato"
-            )
-        )
-
-        status_element = (
-            row.select_one(
-                ".fa-stat"
-            )
-        )
-
-        company = normalize_company(
-            company_element.get_text(
-                " ",
-                strip=True,
-            )
-            if company_element
-            else ""
-        )
-
-        status = (
-            status_element.get_text(
-                " ",
-                strip=True,
-            )
-            if status_element
-            else "Ukendt"
-        )
-
-        insurance_date = parse_date(
-            date_element.get_text(
-                " ",
-                strip=True,
-            )
-            if date_element
-            else ""
-        )
-
-        if (
-            company != "Ukendt"
-            and
-            status.lower() == "aktiv"
-        ):
-
-            return {
-                "company":
-                    company,
-
-                "status":
-                    status,
-
-                "insurance_date":
-                    insurance_date,
-            }
-
-
-    # ========================================================
-    # SIDSTE FALLBACK:
-    # KPI
-    # ========================================================
-
-    kpi = soup.select_one(
-        "#kpi-fors-val"
-    )
-
-    if kpi:
-
-        company = normalize_company(
-            kpi.get_text(
-                " ",
-                strip=True,
-            )
-        )
-
-        if (
-            company
-            and
-            company not in (
-                "Ukendt",
-                "—",
-                "-",
-            )
-        ):
-
-            return {
-                "company":
-                    company,
-
-                "status":
-                    "Ukendt",
-
-                "insurance_date":
-                    None,
-            }
-
-    return None
-
-
-# ============================================================
-# HENT NUMMERPLADE.NET SIDE
+# HENT FORSIKRING FRA TJEKBIL
 # ============================================================
 
 async def get_insurance_info(
@@ -1045,239 +777,159 @@ async def get_insurance_info(
     vehicle,
     semaphore,
 ):
-
     regnr = vehicle[
         "registration"
     ]
 
     url = (
-        f"{NUMMERPLADE_BASE_URL}"
-        f"/nummerplade/"
-        f"{regnr.lower()}.html"
+        f"{TJEKBIL_BASE_URL}"
+        f"/api/v3/dmr/regnr/{regnr}"
     )
 
+    headers = {
+        **TJEKBIL_HEADERS,
+
+        "referer": (
+            f"{TJEKBIL_BASE_URL}"
+            f"/nummerplade/{regnr}/overblik"
+        ),
+    }
+
     async with semaphore:
+        try:
+            async with session.get(
+                url,
+                headers=headers,
+                timeout=aiohttp.ClientTimeout(
+                    total=REQUEST_TIMEOUT
+                ),
+            ) as response:
 
-        for attempt in range(
-            1,
-            MAX_RETRIES + 1,
-        ):
-
-            try:
-
-                async with session.get(
-                    url,
-                    timeout=aiohttp.ClientTimeout(
-                        total=REQUEST_TIMEOUT
-                    ),
-                    allow_redirects=True,
-                ) as response:
-
-                    # ========================================
-                    # HTTP 200
-                    # ========================================
-
-                    if response.status == 200:
-
-                        page_html = (
-                            await response.text(
-                                errors="ignore"
-                            )
-                        )
-
-                        insurance = (
-                            extract_insurance_from_html(
-                                page_html
-                            )
-                        )
-
-                        if not insurance:
-
-                            return {
-                                "success":
-                                    False,
-
-                                "plate":
-                                    regnr,
-
-                                "error":
-                                    "no_insurance_data",
-                            }
-
-                        return {
-
-                            "success":
-                                True,
-
-                            "plate":
-                                regnr,
-
-                            "company":
-                                insurance[
-                                    "company"
-                                ],
-
-                            "insurance_status":
-                                insurance[
-                                    "status"
-                                ],
-
-                            "insurance_date":
-                                insurance[
-                                    "insurance_date"
-                                ],
-
-                            "registration_date":
-                                vehicle[
-                                    "status_date"
-                                ],
-                        }
-
-
-                    # ========================================
-                    # 404
-                    # ========================================
-
-                    if response.status == 404:
-
-                        return {
-                            "success":
-                                False,
-
-                            "plate":
-                                regnr,
-
-                            "error":
-                                "404",
-                        }
-
-
-                    # ========================================
-                    # 403
-                    # ========================================
-
-                    if response.status == 403:
-
-                        return {
-                            "success":
-                                False,
-
-                            "plate":
-                                regnr,
-
-                            "error":
-                                "403",
-                        }
-
-
-                    # ========================================
-                    # 429
-                    # ========================================
-
-                    if response.status == 429:
-
-                        retry_after = int(
-                            response.headers.get(
-                                "Retry-After",
-                                "3",
-                            )
-                        )
-
-                        if attempt < MAX_RETRIES:
-
-                            await asyncio.sleep(
-                                retry_after
-                            )
-
-                            continue
-
-                        return {
-                            "success":
-                                False,
-
-                            "plate":
-                                regnr,
-
-                            "error":
-                                "429",
-                        }
-
+                if response.status != 200:
+                    body = await response.text(
+                        errors="ignore"
+                    )
 
                     return {
-                        "success":
-                            False,
-
-                        "plate":
-                            regnr,
-
-                        "error":
-                            f"http_{response.status}",
+                        "success": False,
+                        "plate": regnr,
+                        "error": (
+                            f"http_{response.status}"
+                        ),
+                        "body": body[:200],
                     }
 
-
-            except asyncio.TimeoutError:
-
-                if attempt < MAX_RETRIES:
-
-                    await asyncio.sleep(
-                        1
+                try:
+                    payload = await response.json(
+                        content_type=None
                     )
 
-                    continue
-
-                return {
-                    "success":
-                        False,
-
-                    "plate":
-                        regnr,
-
-                    "error":
-                        "timeout",
-                }
-
-
-            except aiohttp.ClientError as error:
-
-                if attempt < MAX_RETRIES:
-
-                    await asyncio.sleep(
-                        1
+                except Exception:
+                    body = await response.text(
+                        errors="ignore"
                     )
 
-                    continue
+                    return {
+                        "success": False,
+                        "plate": regnr,
+                        "error": "invalid_json",
+                        "body": body[:200],
+                    }
+
+                extended = (
+                    payload.get(
+                        "extended",
+                        {},
+                    )
+                    or {}
+                )
+
+                insurance = (
+                    extended.get(
+                        "insurance",
+                        {},
+                    )
+                    or {}
+                )
+
+                company = normalize_company(
+                    insurance.get(
+                        "selskab"
+                    )
+                )
+
+                status = str(
+                    insurance.get(
+                        "status",
+                        "",
+                    )
+                ).strip()
+
+                insurance_date = parse_date(
+                    insurance.get(
+                        "oprettet"
+                    )
+                )
+
+                if (
+                    not company
+                    or
+                    company == "Ukendt"
+                ):
+                    return {
+                        "success": False,
+                        "plate": regnr,
+                        "error": "no_company",
+                    }
 
                 return {
-                    "success":
-                        False,
-
-                    "plate":
-                        regnr,
-
-                    "error":
-                        f"network:{error}",
+                    "success": True,
+                    "plate": regnr,
+                    "company": company,
+                    "insurance_status":
+                        status,
+                    "insurance_date":
+                        insurance_date,
+                    "registration_date":
+                        vehicle[
+                            "status_date"
+                        ],
                 }
 
-    return {
-        "success":
-            False,
+        except asyncio.TimeoutError:
+            return {
+                "success": False,
+                "plate": regnr,
+                "error": "timeout",
+            }
 
-        "plate":
-            regnr,
+        except aiohttp.ClientError as error:
+            return {
+                "success": False,
+                "plate": regnr,
+                "error": (
+                    f"network:{error}"
+                ),
+            }
 
-        "error":
-            "unknown",
-    }
+        except Exception as error:
+            return {
+                "success": False,
+                "plate": regnr,
+                "error": (
+                    f"{type(error).__name__}: "
+                    f"{error}"
+                ),
+            }
 
 
 # ============================================================
-# PROCESS NUMMERPLADE.NET MED LIVE PROGRESS
+# TJEKBIL PROCESSERING MED LIVE STATUS
 # ============================================================
 
 async def process_insurance_requests(
     vehicles,
 ):
-
     if not vehicles:
         return []
 
@@ -1291,116 +943,122 @@ async def process_insurance_requests(
     )
 
     results = []
-
     error_counts = {}
+
+    total = len(
+        vehicles
+    )
+
+    completed = 0
+    successful = 0
+    failed = 0
+    http_error_total = 0
+
+    print("")
+    print(
+        "=========================================="
+    )
+    print(
+        "TJEKBIL FORSIKRINGSOPSLAG"
+    )
+    print(
+        "=========================================="
+    )
+
+    print(
+        f"Starter opslag for "
+        f"{total} NYE nummerplader."
+    )
+
+    print(
+        f"Concurrency: {MAX_CONNECTIONS}"
+    )
+
+    print("")
 
     async with aiohttp.ClientSession(
         connector=connector,
-        headers=NUMMERPLADE_HEADERS,
-        cookies=NUMMERPLADE_COOKIES,
     ) as session:
 
-        tasks = [
+        # Kør i små batches, så vi ikke sender
+        # tusindvis af requests på én gang.
+        batch_size = (
+            MAX_CONNECTIONS * 4
+        )
 
-            asyncio.create_task(
-                get_insurance_info(
-                    session,
-                    vehicle,
-                    semaphore,
+        for batch_number, batch in enumerate(
+            chunks(
+                vehicles,
+                batch_size,
+            ),
+            start=1,
+        ):
+            tasks = [
+                asyncio.create_task(
+                    get_insurance_info(
+                        session,
+                        vehicle,
+                        semaphore,
+                    )
+                )
+                for vehicle in batch
+            ]
+
+            batch_results = (
+                await asyncio.gather(
+                    *tasks
                 )
             )
 
-            for vehicle
-            in vehicles
-        ]
+            for result in batch_results:
+                completed += 1
 
-        total = len(
-            tasks
-        )
-
-        completed = 0
-        successful = 0
-        failed = 0
-
-        print("")
-        print(
-            "=========================================="
-        )
-
-        print(
-            "NUMMERPLADE.NET FORSIKRINGSOPSLAG"
-        )
-
-        print(
-            "=========================================="
-        )
-
-        print(
-            f"Starter opslag for "
-            f"{total} NYE nummerplader."
-        )
-
-        print("")
-
-        for future in asyncio.as_completed(
-            tasks
-        ):
-
-            result = await future
-
-            completed += 1
-
-            if (
-                result
-                and
-                result.get(
-                    "success"
-                )
-            ):
-
-                successful += 1
-
-                results.append(
+                if (
                     result
-                )
-
-            else:
-
-                failed += 1
-
-                error = (
+                    and
                     result.get(
-                        "error",
-                        "unknown"
+                        "success"
                     )
-                    if result
-                    else "unknown"
-                )
-
-                error_counts[
-                    error
-                ] = (
-                    error_counts.get(
-                        error,
-                        0
+                ):
+                    successful += 1
+                    results.append(
+                        result
                     )
-                    +
-                    1
-                )
 
+                else:
+                    failed += 1
+
+                    error = (
+                        result.get(
+                            "error",
+                            "unknown",
+                        )
+                        if result
+                        else "unknown"
+                    )
+
+                    error_counts[
+                        error
+                    ] = (
+                        error_counts.get(
+                            error,
+                            0,
+                        )
+                        + 1
+                    )
+
+                    if str(
+                        error
+                    ).startswith(
+                        "http_"
+                    ):
+                        http_error_total += 1
 
             if (
-                completed
-                %
-                PROGRESS_EVERY
-                ==
-                0
+                completed % PROGRESS_EVERY == 0
                 or
-                completed
-                ==
-                total
+                completed >= total
             ):
-
                 percent = (
                     completed
                     /
@@ -1419,9 +1077,35 @@ async def process_insurance_requests(
                     f"{failed}"
                 )
 
+            if (
+                http_error_total
+                >=
+                MAX_HTTP_ERRORS_BEFORE_ABORT
+                and
+                successful == 0
+            ):
+                print("")
+                print(
+                    "⛔ Stopper Tjekbil-opslag."
+                )
+
+                print(
+                    "Der er kommet for mange "
+                    "HTTP-fejl uden ét eneste "
+                    "vellykket opslag."
+                )
+
+                break
+
+            # Skånsom pause mellem batches.
+            if (
+                completed < total
+            ):
+                await asyncio.sleep(
+                    BATCH_PAUSE_SECONDS
+                )
 
     if error_counts:
-
         print("")
         print(
             "Fejlfordeling:"
@@ -1430,11 +1114,9 @@ async def process_insurance_requests(
         for error, count in sorted(
             error_counts.items()
         ):
-
             print(
                 f" - {error}: {count}"
             )
-
 
     return results
 
@@ -1446,7 +1128,7 @@ async def process_insurance_requests(
 async def check_new_registrations():
 
     # ========================================================
-    # 1. BILOPSLAG
+    # 1. FIND REGISTRERINGER
     # ========================================================
 
     vehicles = (
@@ -1454,16 +1136,14 @@ async def check_new_registrations():
     )
 
     if not vehicles:
-
         print(
             "Ingen køretøjer fundet."
         )
-
         return
 
 
     # ========================================================
-    # 2. SUPABASE EXISTING
+    # 2. FIND ALLEREDE BEHANDLEDE
     # ========================================================
 
     existing_plates = (
@@ -1476,12 +1156,9 @@ async def check_new_registrations():
     # ========================================================
 
     new_vehicles = [
-
         vehicle
-
         for vehicle
         in vehicles
-
         if (
             vehicle[
                 "registration"
@@ -1491,23 +1168,19 @@ async def check_new_registrations():
         )
     ]
 
-
     skipped = (
         len(vehicles)
         -
         len(new_vehicles)
     )
 
-
     print("")
     print(
         "=========================================="
     )
-
     print(
         "FILTRERING"
     )
-
     print(
         "=========================================="
     )
@@ -1527,24 +1200,20 @@ async def check_new_registrations():
         f"{len(new_vehicles)}"
     )
 
-
     if not new_vehicles:
-
         print("")
         print(
             "✅ Ingen nye nummerplader."
         )
-
         print(
-            "Der foretages 0 opslag "
-            "på Nummerplade.net."
+            "Der foretages 0 "
+            "Tjekbil-opslag."
         )
-
         return
 
 
     # ========================================================
-    # 4. NUMMERPLADE.NET
+    # 4. FORSIKRING VIA TJEKBIL
     # ========================================================
 
     results = (
@@ -1555,7 +1224,7 @@ async def check_new_registrations():
 
 
     # ========================================================
-    # 5. BYG SUPABASE-DATA
+    # 5. BYG SUPABASE DATA
     # ========================================================
 
     entries = []
@@ -1563,7 +1232,6 @@ async def check_new_registrations():
     plates_data = (
         load_existing_data()
     )
-
 
     for result in results:
 
@@ -1575,43 +1243,43 @@ async def check_new_registrations():
             "company"
         ]
 
-        registration_date = result[
-            "registration_date"
-        ]
+        insurance_status = (
+            result[
+                "insurance_status"
+            ]
+        )
 
-        insurance_status = result[
-            "insurance_status"
-        ]
+        insurance_date = (
+            result[
+                "insurance_date"
+            ]
+        )
 
-        insurance_date = result[
-            "insurance_date"
-        ]
+        registration_date = (
+            result[
+                "registration_date"
+            ]
+        )
 
-
-        # Kun aktive forsikringer
+        # Kun aktive forsikringer.
         if (
             insurance_status
             and
             insurance_status.lower()
-            not in (
-                "aktiv",
-                "ukendt",
-            )
+            !=
+            "aktiv"
         ):
-
             continue
 
-
         entry = {
-
             "company":
                 company,
 
             "plate":
                 plate,
 
-            # Vi bruger datoen fra Bilopslags
-            # registreringsstatus som hoveddato.
+            # Brug registreringsstatus-datoen
+            # fra Bilopslag som date.
             "date":
                 registration_date.isoformat(),
 
@@ -1625,43 +1293,38 @@ async def check_new_registrations():
                 "",
         }
 
-
         entries.append(
             entry
         )
 
-
-        # ================================================
-        # LOKAL JSON BACKUP
-        # ================================================
+        # --------------------------------------------
+        # LOKAL JSON
+        # --------------------------------------------
 
         if company not in plates_data:
-
             plates_data[
                 company
             ] = []
 
-
         existing_local = {
-
             item.get(
                 "plate"
             )
-
             for item
             in plates_data[
                 company
             ]
         }
 
-
-        if plate not in existing_local:
-
+        if (
+            plate
+            not in
+            existing_local
+        ):
             plates_data[
                 company
             ].append(
                 {
-
                     "plate":
                         plate,
 
@@ -1679,7 +1342,6 @@ async def check_new_registrations():
                 }
             )
 
-
         print(
             f"✅ {plate} | "
             f"{company} | "
@@ -1695,9 +1357,7 @@ async def check_new_registrations():
 
     unique_entries = {}
 
-
     for entry in entries:
-
         key = (
             entry[
                 "company"
@@ -1710,7 +1370,6 @@ async def check_new_registrations():
         unique_entries[
             key
         ] = entry
-
 
     final_entries = list(
         unique_entries.values()
@@ -1733,7 +1392,6 @@ async def check_new_registrations():
     # ========================================================
 
     if final_entries:
-
         save_to_json(
             plates_data
         )
@@ -1747,11 +1405,9 @@ async def check_new_registrations():
     print(
         "=========================================="
     )
-
     print(
         "RESULTAT"
     )
-
     print(
         "=========================================="
     )
@@ -1772,8 +1428,14 @@ async def check_new_registrations():
     )
 
     print(
-        f"Nummerplade.net med forsikringsdata: "
+        f"Tjekbil med forsikringsdata: "
         f"{len(results)}"
+    )
+
+    print(
+        f"Aktive forsikringer klar "
+        f"til Supabase: "
+        f"{len(final_entries)}"
     )
 
     print(
@@ -1790,8 +1452,7 @@ if __name__ == "__main__":
 
     print("")
     print(
-        "Bilopslag + Nummerplade.net "
-        "scraper startet."
+        "Bilopslag + Tjekbil scraper startet."
     )
 
     print(
