@@ -8,6 +8,7 @@ import requests
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from pathlib import Path
+from bs4 import BeautifulSoup
 
 
 # ============================================================
@@ -40,7 +41,7 @@ SUPABASE_SERVICE_ROLE_KEY = os.getenv(
 
 
 # ============================================================
-# BILOPSLAG COOKIES
+# COOKIES
 # ============================================================
 
 try:
@@ -50,13 +51,23 @@ try:
             "",
         ) or "{}"
     )
-
 except json.JSONDecodeError:
-    print(
-        "⚠️ BILOPSLAG_COOKIES_JSON er ikke gyldig JSON."
-    )
-
+    print("⚠️ BILOPSLAG_COOKIES_JSON er ugyldig JSON.")
     BILOPSLAG_COOKIES = {}
+
+
+# Nummerplade.net cookies er VALGFRIE.
+# Scriptet kan fungere uden, hvis siden leverer HTML offentligt.
+try:
+    NUMMERPLADE_COOKIES = json.loads(
+        os.getenv(
+            "NUMMERPLADE_COOKIES_JSON",
+            "",
+        ) or "{}"
+    )
+except json.JSONDecodeError:
+    print("⚠️ NUMMERPLADE_COOKIES_JSON er ugyldig JSON.")
+    NUMMERPLADE_COOKIES = {}
 
 
 # ============================================================
@@ -71,11 +82,14 @@ BILOPSLAG_BASE_URL = (
     "https://bilopslag.nu"
 )
 
-# Antal samtidige forsikringsopslag
+NUMMERPLADE_BASE_URL = (
+    "https://www.nummerplade.net"
+)
+
 MAX_CONNECTIONS = int(
     os.getenv(
         "MAX_CONNECTIONS",
-        "20",
+        "10",
     )
 )
 
@@ -86,7 +100,13 @@ REQUEST_TIMEOUT = int(
     )
 )
 
-# Vis status efter hver 25 behandlede
+MAX_RETRIES = int(
+    os.getenv(
+        "MAX_RETRIES",
+        "2",
+    )
+)
+
 PROGRESS_EVERY = int(
     os.getenv(
         "PROGRESS_EVERY",
@@ -100,7 +120,7 @@ PLADE_REGEX = re.compile(
 
 
 # ============================================================
-# HEADERS
+# HEADERS - BILOPSLAG
 # ============================================================
 
 BILOPSLAG_HEADERS = {
@@ -126,6 +146,44 @@ BILOPSLAG_HEADERS = {
     "sec-fetch-mode": "cors",
 
     "sec-fetch-site": "same-origin",
+
+    "user-agent": (
+        "Mozilla/5.0 "
+        "(Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 "
+        "(KHTML, like Gecko) "
+        "Chrome/151.0.0.0 "
+        "Safari/537.36"
+    ),
+}
+
+
+# ============================================================
+# HEADERS - NUMMERPLADE.NET
+# ============================================================
+
+NUMMERPLADE_HEADERS = {
+    "accept": (
+        "text/html,"
+        "application/xhtml+xml,"
+        "application/xml;q=0.9,"
+        "image/avif,"
+        "image/webp,"
+        "image/apng,"
+        "*/*;q=0.8"
+    ),
+
+    "accept-language": (
+        "da-DK,da;q=0.9,"
+        "en-US;q=0.8,"
+        "en;q=0.7"
+    ),
+
+    "cache-control": "no-cache",
+
+    "pragma": "no-cache",
+
+    "upgrade-insecure-requests": "1",
 
     "user-agent": (
         "Mozilla/5.0 "
@@ -273,19 +331,12 @@ def supabase_headers(
 
 def delete_old_plates_from_supabase():
     """
-    Beholder KUN:
+    Beholder kun:
 
     - i dag
     - i går
 
-    Hvis programmet fx kører 10. august:
-
-    behold:
-        9. august
-        10. august
-
-    slet:
-        alt før 9. august
+    Alt ældre slettes.
     """
 
     if (
@@ -346,8 +397,8 @@ def delete_old_plates_from_supabase():
         )
 
         print(
-            f"   Beholder kun {yesterday} "
-            f"og {today}."
+            f"   Beholder kun "
+            f"{yesterday} og {today}."
         )
 
         return True
@@ -367,13 +418,8 @@ def delete_old_plates_from_supabase():
 
 def get_existing_plates_from_supabase():
     """
-    Henter nummerplader som allerede findes
-    i Supabase.
-
-    Disse plader springes over FØR
-    forsikringsopslag.
-
-    Det er afgørende for hastigheden.
+    Alle plader som allerede findes i Supabase
+    springes over INDEN opslag på Nummerplade.net.
     """
 
     if (
@@ -395,7 +441,7 @@ def get_existing_plates_from_supabase():
     print("")
     print(
         "🔎 Henter allerede behandlede "
-        "nummerplader fra Supabase..."
+        "plader fra Supabase..."
     )
 
     while True:
@@ -416,9 +462,9 @@ def get_existing_plates_from_supabase():
             )
 
             if response.status_code != 200:
+
                 print(
-                    "⚠️ Kunne ikke hente "
-                    "eksisterende plader: "
+                    "⚠️ Supabase GET fejlede: "
                     f"{response.status_code} "
                     f"{response.text}"
                 )
@@ -504,7 +550,6 @@ def upload_batch_to_supabase(
 
     uploaded = 0
 
-    # Send højst 250 ad gangen
     for batch in chunks(
         entries,
         250,
@@ -536,8 +581,7 @@ def upload_batch_to_supabase(
                 continue
 
             print(
-                "❌ Supabase batch-upload "
-                "fejlede: "
+                "❌ Supabase upload fejlede: "
                 f"{response.status_code} "
                 f"{response.text}"
             )
@@ -553,18 +597,15 @@ def upload_batch_to_supabase(
 
 
 # ============================================================
-# ADVANCED SEARCH
+# BILOPSLAG - ADVANCED SEARCH
 # ============================================================
 
 def hent_registrerede_koeretoejer():
     """
-    Henter registreringer fra:
+    Henter biler der er blevet registreret:
 
-    I DAG
-    +
-    I GÅR
-
-    Datoerne beregnes automatisk.
+    - i dag
+    - i går
     """
 
     today = datetime.now(
@@ -620,7 +661,6 @@ def hent_registrerede_koeretoejer():
     vehicles = {}
 
     page = 1
-
     total_pages = None
 
     while True:
@@ -657,10 +697,6 @@ def hent_registrerede_koeretoejer():
                 [],
             )
 
-            # --------------------------------------------
-            # FØRSTE SIDE
-            # --------------------------------------------
-
             if total_pages is None:
 
                 total_pages = int(
@@ -688,10 +724,6 @@ def hent_registrerede_koeretoejer():
                 f"på side {page}"
             )
 
-            # --------------------------------------------
-            # BILER
-            # --------------------------------------------
-
             for car in cars:
 
                 registration = str(
@@ -707,13 +739,6 @@ def hent_registrerede_koeretoejer():
                 if not PLADE_REGEX.match(
                     registration
                 ):
-                    continue
-
-                vehicle_id = car.get(
-                    "id"
-                )
-
-                if not vehicle_id:
                     continue
 
                 status = str(
@@ -735,9 +760,6 @@ def hent_registrerede_koeretoejer():
                 if not status_date:
                     continue
 
-                # Ekstra sikkerhed:
-                # Accepter kun i dag/i går.
-
                 if status_date not in (
                     today,
                     yesterday,
@@ -748,11 +770,16 @@ def hent_registrerede_koeretoejer():
                     registration
                 ] = {
 
-                    "id":
-                        vehicle_id,
-
                     "registration":
                         registration,
+
+                    "status_date":
+                        status_date,
+
+                    "vehicle_id":
+                        car.get(
+                            "id"
+                        ),
 
                     "vin":
                         str(
@@ -761,21 +788,7 @@ def hent_registrerede_koeretoejer():
                                 "",
                             )
                         ).upper().strip(),
-
-                    "registration_status_updated_at":
-                        status_date,
-
-                    "first_registration_date":
-                        parse_date(
-                            car.get(
-                                "first_registration_date"
-                            )
-                        ),
                 }
-
-            # --------------------------------------------
-            # PAGINATION
-            # --------------------------------------------
 
             has_more = bool(
                 payload.get(
@@ -813,15 +826,218 @@ def hent_registrerede_koeretoejer():
 
     print(
         f"🎯 Fandt {len(result)} "
-        "unikke registrerede køretøjer "
-        "fra i dag/i går."
+        "unikke registrerede køretøjer."
     )
 
     return result
 
 
 # ============================================================
-# FORSIKRING
+# PARSE FORSIKRING FRA NUMMERPLADE.NET HTML
+# ============================================================
+
+def extract_insurance_from_html(
+    page_html,
+):
+
+    soup = BeautifulSoup(
+        page_html,
+        "html.parser",
+    )
+
+    # ========================================================
+    # PRIMÆR METODE:
+    # detaljeret forsikringskort
+    # ========================================================
+
+    insurance_box = soup.select_one(
+        "#forsikring-card .bb-dom"
+    )
+
+    if insurance_box:
+
+        company_element = (
+            insurance_box.select_one(
+                ".bb-dom-tx > b"
+            )
+        )
+
+        date_element = (
+            insurance_box.select_one(
+                ".fa-nb"
+            )
+        )
+
+        company = normalize_company(
+            company_element.get_text(
+                " ",
+                strip=True,
+            )
+            if company_element
+            else ""
+        )
+
+        date_text = (
+            date_element.get_text(
+                " ",
+                strip=True,
+            )
+            if date_element
+            else ""
+        )
+
+        insurance_date = parse_date(
+            date_text
+        )
+
+        box_text = (
+            insurance_box.get_text(
+                " ",
+                strip=True,
+            ).lower()
+        )
+
+        if "aktiv forsikring" in box_text:
+            status = "Aktiv"
+
+        elif "ophørt" in box_text:
+            status = "Ophørt"
+
+        else:
+            status = "Ukendt"
+
+        if company != "Ukendt":
+
+            return {
+                "company":
+                    company,
+
+                "status":
+                    status,
+
+                "insurance_date":
+                    insurance_date,
+            }
+
+
+    # ========================================================
+    # FALLBACK:
+    # historikrække
+    # ========================================================
+
+    history_rows = soup.select(
+        "#forsikring-card .fa-rk"
+    )
+
+    for row in history_rows:
+
+        company_element = (
+            row.find(
+                "b"
+            )
+        )
+
+        date_element = (
+            row.select_one(
+                ".fa-dato"
+            )
+        )
+
+        status_element = (
+            row.select_one(
+                ".fa-stat"
+            )
+        )
+
+        company = normalize_company(
+            company_element.get_text(
+                " ",
+                strip=True,
+            )
+            if company_element
+            else ""
+        )
+
+        status = (
+            status_element.get_text(
+                " ",
+                strip=True,
+            )
+            if status_element
+            else "Ukendt"
+        )
+
+        insurance_date = parse_date(
+            date_element.get_text(
+                " ",
+                strip=True,
+            )
+            if date_element
+            else ""
+        )
+
+        if (
+            company != "Ukendt"
+            and
+            status.lower() == "aktiv"
+        ):
+
+            return {
+                "company":
+                    company,
+
+                "status":
+                    status,
+
+                "insurance_date":
+                    insurance_date,
+            }
+
+
+    # ========================================================
+    # SIDSTE FALLBACK:
+    # KPI
+    # ========================================================
+
+    kpi = soup.select_one(
+        "#kpi-fors-val"
+    )
+
+    if kpi:
+
+        company = normalize_company(
+            kpi.get_text(
+                " ",
+                strip=True,
+            )
+        )
+
+        if (
+            company
+            and
+            company not in (
+                "Ukendt",
+                "—",
+                "-",
+            )
+        ):
+
+            return {
+                "company":
+                    company,
+
+                "status":
+                    "Ukendt",
+
+                "insurance_date":
+                    None,
+            }
+
+    return None
+
+
+# ============================================================
+# HENT NUMMERPLADE.NET SIDE
 # ============================================================
 
 async def get_insurance_info(
@@ -834,142 +1050,228 @@ async def get_insurance_info(
         "registration"
     ]
 
-    vehicle_id = vehicle[
-        "id"
-    ]
-
     url = (
-        f"{BILOPSLAG_BASE_URL}"
-        f"/api/statistics/vehicles/"
-        f"{vehicle_id}/dmr"
+        f"{NUMMERPLADE_BASE_URL}"
+        f"/nummerplade/"
+        f"{regnr.lower()}.html"
     )
-
-    headers = {
-
-        "Accept":
-            "application/json",
-
-        "X-Requested-With":
-            "XMLHttpRequest",
-
-        "Referer":
-            (
-                f"{BILOPSLAG_BASE_URL}"
-                f"/nummerplade/{regnr}"
-            ),
-    }
 
     async with semaphore:
 
-        try:
+        for attempt in range(
+            1,
+            MAX_RETRIES + 1,
+        ):
 
-            async with session.get(
-                url,
-                headers=headers,
-                timeout=aiohttp.ClientTimeout(
-                    total=REQUEST_TIMEOUT
-                ),
-            ) as response:
+            try:
 
-                # ----------------------------------------
-                # HTTP FEJL
-                # ----------------------------------------
+                async with session.get(
+                    url,
+                    timeout=aiohttp.ClientTimeout(
+                        total=REQUEST_TIMEOUT
+                    ),
+                    allow_redirects=True,
+                ) as response:
 
-                if response.status != 200:
+                    # ========================================
+                    # HTTP 200
+                    # ========================================
+
+                    if response.status == 200:
+
+                        page_html = (
+                            await response.text(
+                                errors="ignore"
+                            )
+                        )
+
+                        insurance = (
+                            extract_insurance_from_html(
+                                page_html
+                            )
+                        )
+
+                        if not insurance:
+
+                            return {
+                                "success":
+                                    False,
+
+                                "plate":
+                                    regnr,
+
+                                "error":
+                                    "no_insurance_data",
+                            }
+
+                        return {
+
+                            "success":
+                                True,
+
+                            "plate":
+                                regnr,
+
+                            "company":
+                                insurance[
+                                    "company"
+                                ],
+
+                            "insurance_status":
+                                insurance[
+                                    "status"
+                                ],
+
+                            "insurance_date":
+                                insurance[
+                                    "insurance_date"
+                                ],
+
+                            "registration_date":
+                                vehicle[
+                                    "status_date"
+                                ],
+                        }
+
+
+                    # ========================================
+                    # 404
+                    # ========================================
+
+                    if response.status == 404:
+
+                        return {
+                            "success":
+                                False,
+
+                            "plate":
+                                regnr,
+
+                            "error":
+                                "404",
+                        }
+
+
+                    # ========================================
+                    # 403
+                    # ========================================
+
+                    if response.status == 403:
+
+                        return {
+                            "success":
+                                False,
+
+                            "plate":
+                                regnr,
+
+                            "error":
+                                "403",
+                        }
+
+
+                    # ========================================
+                    # 429
+                    # ========================================
+
+                    if response.status == 429:
+
+                        retry_after = int(
+                            response.headers.get(
+                                "Retry-After",
+                                "3",
+                            )
+                        )
+
+                        if attempt < MAX_RETRIES:
+
+                            await asyncio.sleep(
+                                retry_after
+                            )
+
+                            continue
+
+                        return {
+                            "success":
+                                False,
+
+                            "plate":
+                                regnr,
+
+                            "error":
+                                "429",
+                        }
+
 
                     return {
-                        "success": False,
+                        "success":
+                            False,
 
                         "plate":
                             regnr,
 
-                        "http_status":
-                            response.status,
+                        "error":
+                            f"http_{response.status}",
                     }
 
-                # ----------------------------------------
-                # JSON
-                # ----------------------------------------
 
-                payload = (
-                    await response.json(
-                        content_type=None
-                    )
-                )
+            except asyncio.TimeoutError:
 
-                dmr_data = (
-                    payload.get(
-                        "dmr_data",
-                        {},
-                    )
-                    or {}
-                )
+                if attempt < MAX_RETRIES:
 
-                company = normalize_company(
-                    dmr_data.get(
-                        "insurance_company"
+                    await asyncio.sleep(
+                        1
                     )
-                )
 
-                insurance_status = str(
-                    dmr_data.get(
-                        "insurance_status",
-                        "",
-                    )
-                ).strip()
-
-                insurance_date = parse_date(
-                    dmr_data.get(
-                        "insurance_created_at"
-                    )
-                )
+                    continue
 
                 return {
-
                     "success":
-                        (
-                            company
-                            !=
-                            "Ukendt"
-                        ),
+                        False,
 
                     "plate":
                         regnr,
 
-                    "company":
-                        company,
-
-                    "insurance_status":
-                        insurance_status,
-
-                    "insurance_date":
-                        insurance_date,
-
-                    "registration_status_date":
-                        vehicle[
-                            "registration_status_updated_at"
-                        ],
+                    "error":
+                        "timeout",
                 }
 
-        except (
-            aiohttp.ClientError,
-            asyncio.TimeoutError,
-            ValueError,
-        ):
 
-            return {
-                "success": False,
+            except aiohttp.ClientError as error:
 
-                "plate":
-                    regnr,
+                if attempt < MAX_RETRIES:
 
-                "http_status":
-                    "error",
-            }
+                    await asyncio.sleep(
+                        1
+                    )
+
+                    continue
+
+                return {
+                    "success":
+                        False,
+
+                    "plate":
+                        regnr,
+
+                    "error":
+                        f"network:{error}",
+                }
+
+    return {
+        "success":
+            False,
+
+        "plate":
+            regnr,
+
+        "error":
+            "unknown",
+    }
 
 
 # ============================================================
-# FORSIKRINGSOPSLAG MED LIVE STATUS
+# PROCESS NUMMERPLADE.NET MED LIVE PROGRESS
 # ============================================================
 
 async def process_insurance_requests(
@@ -990,10 +1292,12 @@ async def process_insurance_requests(
 
     results = []
 
+    error_counts = {}
+
     async with aiohttp.ClientSession(
         connector=connector,
-        headers=BILOPSLAG_HEADERS,
-        cookies=BILOPSLAG_COOKIES,
+        headers=NUMMERPLADE_HEADERS,
+        cookies=NUMMERPLADE_COOKIES,
     ) as session:
 
         tasks = [
@@ -1015,19 +1319,16 @@ async def process_insurance_requests(
         )
 
         completed = 0
-
         successful = 0
-
         failed = 0
 
         print("")
-
         print(
             "=========================================="
         )
 
         print(
-            "FORSIKRINGSOPSLAG"
+            "NUMMERPLADE.NET FORSIKRINGSOPSLAG"
         )
 
         print(
@@ -1067,9 +1368,26 @@ async def process_insurance_requests(
 
                 failed += 1
 
-            # --------------------------------------------
-            # LIVE PROGRESS
-            # --------------------------------------------
+                error = (
+                    result.get(
+                        "error",
+                        "unknown"
+                    )
+                    if result
+                    else "unknown"
+                )
+
+                error_counts[
+                    error
+                ] = (
+                    error_counts.get(
+                        error,
+                        0
+                    )
+                    +
+                    1
+                )
+
 
             if (
                 completed
@@ -1097,9 +1415,26 @@ async def process_insurance_requests(
                     f"({percent:.1f}%) | "
                     f"med forsikring: "
                     f"{successful} | "
-                    f"fejl/uden selskab: "
+                    f"fejl/uden data: "
                     f"{failed}"
                 )
+
+
+    if error_counts:
+
+        print("")
+        print(
+            "Fejlfordeling:"
+        )
+
+        for error, count in sorted(
+            error_counts.items()
+        ):
+
+            print(
+                f" - {error}: {count}"
+            )
+
 
     return results
 
@@ -1111,7 +1446,7 @@ async def process_insurance_requests(
 async def check_new_registrations():
 
     # ========================================================
-    # 1. ADVANCED SEARCH
+    # 1. BILOPSLAG
     # ========================================================
 
     vehicles = (
@@ -1128,7 +1463,7 @@ async def check_new_registrations():
 
 
     # ========================================================
-    # 2. HENT ALLEREDE BEHANDLEDE
+    # 2. SUPABASE EXISTING
     # ========================================================
 
     existing_plates = (
@@ -1137,7 +1472,7 @@ async def check_new_registrations():
 
 
     # ========================================================
-    # 3. FJERN ALLEREDE BEHANDLEDE
+    # 3. KUN NYE NUMMERPLADER
     # ========================================================
 
     new_vehicles = [
@@ -1164,12 +1499,7 @@ async def check_new_registrations():
     )
 
 
-    # ========================================================
-    # STATUS
-    # ========================================================
-
     print("")
-
     print(
         "=========================================="
     )
@@ -1198,28 +1528,23 @@ async def check_new_registrations():
     )
 
 
-    # ========================================================
-    # INTET NYT?
-    # ========================================================
-
     if not new_vehicles:
 
         print("")
-
         print(
             "✅ Ingen nye nummerplader."
         )
 
         print(
-            "Der foretages derfor "
-            "0 forsikringsrequests."
+            "Der foretages 0 opslag "
+            "på Nummerplade.net."
         )
 
         return
 
 
     # ========================================================
-    # 4. FORSIKRING
+    # 4. NUMMERPLADE.NET
     # ========================================================
 
     results = (
@@ -1230,7 +1555,7 @@ async def check_new_registrations():
 
 
     # ========================================================
-    # 5. BYG DATA
+    # 5. BYG SUPABASE-DATA
     # ========================================================
 
     entries = []
@@ -1250,9 +1575,31 @@ async def check_new_registrations():
             "company"
         ]
 
-        entry_date = result[
-            "registration_status_date"
+        registration_date = result[
+            "registration_date"
         ]
+
+        insurance_status = result[
+            "insurance_status"
+        ]
+
+        insurance_date = result[
+            "insurance_date"
+        ]
+
+
+        # Kun aktive forsikringer
+        if (
+            insurance_status
+            and
+            insurance_status.lower()
+            not in (
+                "aktiv",
+                "ukendt",
+            )
+        ):
+
+            continue
 
 
         entry = {
@@ -1263,8 +1610,10 @@ async def check_new_registrations():
             "plate":
                 plate,
 
+            # Vi bruger datoen fra Bilopslags
+            # registreringsstatus som hoveddato.
             "date":
-                entry_date.isoformat(),
+                registration_date.isoformat(),
 
             "checked":
                 False,
@@ -1282,9 +1631,9 @@ async def check_new_registrations():
         )
 
 
-        # --------------------------------------------
+        # ================================================
         # LOKAL JSON BACKUP
-        # --------------------------------------------
+        # ================================================
 
         if company not in plates_data:
 
@@ -1306,11 +1655,7 @@ async def check_new_registrations():
         }
 
 
-        if (
-            plate
-            not in
-            existing_local
-        ):
+        if plate not in existing_local:
 
             plates_data[
                 company
@@ -1321,7 +1666,7 @@ async def check_new_registrations():
                         plate,
 
                     "date":
-                        entry_date.isoformat(),
+                        registration_date.isoformat(),
 
                     "checked":
                         False,
@@ -1335,8 +1680,17 @@ async def check_new_registrations():
             )
 
 
+        print(
+            f"✅ {plate} | "
+            f"{company} | "
+            f"{insurance_status} | "
+            f"forsikring siden: "
+            f"{insurance_date or 'ukendt'}"
+        )
+
+
     # ========================================================
-    # 6. FJERN DUBLETTER
+    # 6. DEDUP
     # ========================================================
 
     unique_entries = {}
@@ -1348,7 +1702,6 @@ async def check_new_registrations():
             entry[
                 "company"
             ],
-
             entry[
                 "plate"
             ],
@@ -1391,7 +1744,6 @@ async def check_new_registrations():
     # ========================================================
 
     print("")
-
     print(
         "=========================================="
     )
@@ -1420,12 +1772,12 @@ async def check_new_registrations():
     )
 
     print(
-        f"Med forsikringsselskab: "
-        f"{len(final_entries)}"
+        f"Nummerplade.net med forsikringsdata: "
+        f"{len(results)}"
     )
 
     print(
-        f"Uploadet/ignoreret i Supabase: "
+        f"Sendt/ignoreret i Supabase: "
         f"{uploaded}"
     )
 
@@ -1438,23 +1790,22 @@ if __name__ == "__main__":
 
     print("")
     print(
-        "Bilopslag scraper startet."
+        "Bilopslag + Nummerplade.net "
+        "scraper startet."
     )
 
     print(
-        f"Tidspunkt: "
+        "Tidspunkt: "
         f"{datetime.now(COPENHAGEN)}"
     )
 
-    # Fjern data ældre end i går
     delete_old_plates_from_supabase()
 
-    # Kør
     asyncio.run(
         check_new_registrations()
     )
 
     print("")
     print(
-        "Bilopslag scraper færdig."
+        "Scraper færdig."
     )
